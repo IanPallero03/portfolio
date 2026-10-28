@@ -15,11 +15,16 @@ type Project = {
   highlights: string[];
   technologies: string[];
   video: string;
-  poster: string;
+  poster?: string;
   theme: "violet" | "blue" | "dark";
   demo?: string;
   github?: string;
 };
+
+// Prefijo necesario para los archivos de public/ en GitHub Pages.
+// En desarrollo local las rutas se mantienen sin prefijo.
+const assetBasePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
+const assetUrl = (path: string) => `${assetBasePath}${path}`;
 
 const projects: Project[] = [
   {
@@ -43,7 +48,6 @@ const projects: Project[] = [
     highlights: ["Reservas limitadas a la semana actual y control de disponibilidad", "Panel privado para consultar y gestionar reservas", "Firebase Authentication y sincronización mediante Firestore"],
     technologies: ["React", "Vite", "Tailwind CSS", "Firebase Auth", "Firestore"],
     video: "/video/reservas.mp4",
-    poster: "/images/reservas-cover.jpg",
     theme: "blue",
     demo: "https://ianpallero03.github.io/sistema-reservas-restaurante/",
     github: "https://github.com/IanPallero03/sistema-reservas-restaurante"
@@ -56,7 +60,6 @@ const projects: Project[] = [
     highlights: ["Búsqueda dinámica de películas", "Filtros por categorías y géneros", "Componentes reutilizables e integración con API externa"],
     technologies: ["React", "Vite", "JavaScript", "Tailwind CSS", "TMDB API"],
     video: "/video/trailerbox.mp4",
-    poster: "/images/trailerbox-cover.jpg",
     theme: "dark",
     demo: "https://ianpallero03.github.io/TrailerBox/",
     github: "https://github.com/IanPallero03/TrailerBox"
@@ -111,7 +114,7 @@ useEffect(() => {
           <span className="mx-auto max-w-[70%] truncate font-mono text-[9px] text-white/50 sm:text-[11px]">{project.title} · Vista real</span>
         </div>
         <div className="relative aspect-video bg-[#F7F7FF]">
-          <video ref={videoRef} src={project.video} poster={project.poster} muted playsInline loop preload="metadata" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} className="absolute inset-0 h-full w-full object-cover" aria-label={`Video de demostración de ${project.title}`} />
+          <video ref={videoRef} src={assetUrl(project.video)} poster={project.poster ? assetUrl(project.poster) : undefined} muted playsInline loop preload="metadata" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} className="absolute inset-0 h-full w-full object-cover" aria-label={`Video de demostración de ${project.title}`} />
           <button type="button" onClick={() => { if (playing) setManualPause(true); else { setManualPause(false); void videoRef.current?.play().catch(() => {}); } }} className="absolute bottom-3 right-3 rounded-full border border-white/20 bg-[#17192D]/85 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-violet-600 sm:bottom-4 sm:right-4" aria-label={playing ? `Pausar video de ${project.title}` : `Reproducir video de ${project.title}`}>
             {playing ? "Ⅱ Pausar" : "▶ Reproducir"}
           </button>
