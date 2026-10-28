@@ -106,7 +106,7 @@ export default function HeroIntro() {
 
               <div className="relative aspect-[4/4.5] overflow-hidden rounded-[20px] bg-slate-200">
                 <Image
-                  src="/images/imagen_principal_mejorada.png?v=2"
+                  src="/images/imagen_principal_mejorada_11zon.webp?v=2"
                   alt="Retrato de Ian Pallero"
                   fill
                   priority
