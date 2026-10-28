@@ -105,15 +105,19 @@ export default function HeroIntro() {
               <div className="absolute -inset-3 rounded-[28px] border border-primary/15" />
 
               <div className="relative aspect-[4/4.5] overflow-hidden rounded-[20px] bg-slate-200">
-                <Image
-                  src="/images/imagen_principal_mejorada_11zon.webp?v=2"
-                  alt="Retrato de Ian Pallero"
-                  fill
-                  priority
-                  unoptimized
-                  sizes="(max-width: 639px) 250px, (max-width: 767px) 280px, (max-width: 1023px) 310px, 320px"
-                  className="object-cover object-center"
-                />
+                
+<Image
+  src={`${
+    process.env.NODE_ENV === "production" ? "/portfolio" : ""
+  }/images/imagen_principal_mejorada.png`}
+  alt="Retrato de Ian Pallero"
+  fill
+  priority
+  unoptimized
+  sizes="(max-width: 639px) 250px, (max-width: 767px) 280px, (max-width: 1023px) 310px, 320px"
+  className="object-cover object-center"
+/>
+
 
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#101426]/15 via-transparent to-primary/5" />
               </div>
