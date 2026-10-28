@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   },
 
   // Ruta del repositorio en GitHub Pages
-  basePath: isProduction ? "/portfolio-2.0" : "",
+  basePath: isProduction ? "/portfolio" : "",
 
   // Mantener las rutas compatibles con hosting estático
   trailingSlash: true,
