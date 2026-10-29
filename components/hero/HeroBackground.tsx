@@ -10,103 +10,102 @@ gsap.registerPlugin(useGSAP);
 export default function HeroBackground() {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
-  
-useGSAP(
-  () => {
-    const element = backgroundRef.current;
-    if (!element) return;
+  useGSAP(
+    () => {
+      const element = backgroundRef.current;
+      if (!element) return;
 
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
 
-    if (reducedMotion) return;
+      if (reducedMotion) return;
 
-    const animations: gsap.core.Tween[] = [];
+      const animations: gsap.core.Tween[] = [];
 
-    animations.push(
-      gsap.to(".liquid-shape-left", {
-        x: 25,
-        y: -22,
-        rotation: 8,
-        duration: 10,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      })
-    );
+      animations.push(
+        gsap.to(".liquid-shape-left", {
+          x: 25,
+          y: -22,
+          rotation: 8,
+          duration: 10,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        })
+      );
 
-    animations.push(
-      gsap.to(".liquid-shape-right", {
-        x: -22,
-        y: 28,
-        rotation: -7,
-        duration: 12,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      })
-    );
+      animations.push(
+        gsap.to(".liquid-shape-right", {
+          x: -22,
+          y: 28,
+          rotation: -7,
+          duration: 12,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        })
+      );
 
-    animations.push(
-      gsap.to(".hero-wave-one", {
-        x: 35,
-        y: -15,
-        duration: 12,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      })
-    );
+      animations.push(
+        gsap.to(".hero-wave-one", {
+          x: 35,
+          y: -15,
+          duration: 12,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        })
+      );
 
-    animations.push(
-      gsap.to(".hero-wave-two", {
-        x: -40,
-        y: 20,
-        duration: 15,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      })
-    );
+      animations.push(
+        gsap.to(".hero-wave-two", {
+          x: -40,
+          y: 20,
+          duration: 15,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        })
+      );
 
-    animations.push(
-      gsap.to(".hero-orb", {
-        y: -18,
-        x: 10,
-        duration: 5,
-        stagger: 0.8,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      })
-    );
+      animations.push(
+        gsap.to(".hero-orb", {
+          y: -18,
+          x: 10,
+          duration: 5,
+          stagger: 0.8,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        })
+      );
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        animations.forEach((animation) => {
-          if (entry.isIntersecting) {
-            animation.resume();
-          } else {
-            animation.pause();
-          }
-        });
-      },
-      {
-        threshold: 0,
-        rootMargin: "100px 0px",
-      }
-    );
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          animations.forEach((animation) => {
+            if (entry.isIntersecting) {
+              animation.resume();
+            } else {
+              animation.pause();
+            }
+          });
+        },
+        {
+          threshold: 0,
+          rootMargin: "100px 0px",
+        }
+      );
 
-    observer.observe(element);
+      observer.observe(element);
 
-    return () => {
-      observer.disconnect();
-      animations.forEach((animation) => animation.kill());
-    };
-  },
-  { scope: backgroundRef }
-);
+      return () => {
+        observer.disconnect();
+        animations.forEach((animation) => animation.kill());
+      };
+    },
+    { scope: backgroundRef }
+  );
 
   return (
     <div
@@ -120,10 +119,10 @@ useGSAP(
           "linear-gradient(to bottom, transparent 0%, black 18%, black 78%, transparent 100%)",
       }}
     >
-      {/* LUCES AMBIENTALES */}
-      <div className="absolute -left-40 top-[25%] h-[450px] w-[450px] rounded-full bg-blue-200/35 blur-[110px]" />
+      {/* LUCES AMBIENTALES - OPTIMIZADAS PARA MÓVIL */}
+      <div className="absolute -left-40 top-[25%] h-[450px] w-[450px] rounded-full bg-blue-200/35 blur-[45px] md:blur-[110px]" />
 
-      <div className="absolute -right-40 top-[5%] h-[500px] w-[500px] rounded-full bg-violet-200/40 blur-[120px]" />
+      <div className="absolute -right-40 top-[5%] h-[500px] w-[500px] rounded-full bg-violet-200/40 blur-[50px] md:blur-[120px]" />
 
       {/* ONDAS LUMINOSAS */}
       <svg
@@ -140,26 +139,10 @@ useGSAP(
             x2="1"
             y2="0"
           >
-            <stop
-              offset="0%"
-              stopColor="#93C5FD"
-              stopOpacity="0"
-            />
-            <stop
-              offset="40%"
-              stopColor="#A78BFA"
-              stopOpacity="0.4"
-            />
-            <stop
-              offset="70%"
-              stopColor="#60A5FA"
-              stopOpacity="0.35"
-            />
-            <stop
-              offset="100%"
-              stopColor="#8B5CF6"
-              stopOpacity="0"
-            />
+            <stop offset="0%" stopColor="#93C5FD" stopOpacity="0" />
+            <stop offset="40%" stopColor="#A78BFA" stopOpacity="0.4" />
+            <stop offset="70%" stopColor="#60A5FA" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -217,3 +200,4 @@ useGSAP(
     </div>
   );
 }
+

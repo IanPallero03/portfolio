@@ -312,8 +312,9 @@ export default function ProjectsShowcaseV2() {
         }
       );
 
-      // Profundidad sutil en el marco interior, independiente del reveal.
-      if (depth) {
+      // El parallax se mantiene solo en escritorio para evitar trabajo
+      // continuo de ScrollTrigger durante el scroll en celulares.
+      if (depth && window.matchMedia("(min-width: 768px)").matches) {
         gsap.fromTo(depth,
           { y: -14 },
           {
@@ -351,9 +352,9 @@ export default function ProjectsShowcaseV2() {
         <div className="absolute inset-0 bg-[linear-gradient(165deg,#F7F5FF_0%,#F1F5FF_30%,#F9F8FF_55%,#EEF5FF_78%,#F8F5FF_100%)]" />
 
         {/* Luces ambientales similares a las del Hero */}
-        <div className="absolute -left-40 top-[15%] h-[450px] w-[450px] rounded-full bg-blue-200/35 blur-[110px]" />
-        <div className="absolute -right-40 top-[42%] h-[500px] w-[500px] rounded-full bg-violet-200/40 blur-[120px]" />
-        <div className="absolute -left-40 bottom-[5%] h-[450px] w-[450px] rounded-full bg-violet-200/30 blur-[115px]" />
+        <div className="absolute -left-40 top-[15%] h-[450px] w-[450px] rounded-full bg-blue-200/35 blur-[45px] md:blur-[110px]" />
+        <div className="absolute -right-40 top-[42%] h-[500px] w-[500px] rounded-full bg-violet-200/40 blur-[50px] md:blur-[120px]" />
+        <div className="absolute -left-40 bottom-[5%] h-[450px] w-[450px] rounded-full bg-violet-200/30 blur-[45px] md:blur-[115px]" />
 
         {/* Ondas SVG a lo largo de la sección; ID único para evitar conflictos con Hero */}
         <svg

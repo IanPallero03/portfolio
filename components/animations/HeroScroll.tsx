@@ -130,7 +130,8 @@ export default function HeroScroll({
               trigger: scene,
               start: "top 85%",
               end: "center 45%",
-              scrub: 0.6,
+              toggleActions: "play none none none",
+              once: true,
               invalidateOnRefresh: true,
             },
           });
