@@ -110,7 +110,6 @@ export default function HeroScroll({
       // CELULARES: MODO RENDIMIENTO
       // ==========================================
       mm.add("(max-width: 767px)", () => {
-        // El Hero se muestra normalmente.
         gsap.set(contentRef.current, {
           autoAlpha: 1,
           x: 0,
@@ -118,18 +117,12 @@ export default function HeroScroll({
           clearProps: "transform",
         });
 
-        // La sección narrativa aparece directamente.
         gsap.set(sceneRef.current, {
           autoAlpha: 1,
           x: 0,
           y: 0,
           clearProps: "transform",
         });
-
-        // Sin timeline.
-        // Sin ScrollTrigger.
-        // Sin pin.
-        // Sin animaciones de entrada.
       });
 
       // ==========================================
