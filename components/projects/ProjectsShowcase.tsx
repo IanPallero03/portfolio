@@ -70,6 +70,7 @@ function ProjectVideo({ project }: { project: Project }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [inView, setInView] = useState(false);
+  const [hasBeenVisible, setHasBeenVisible] = useState(false);
   const [manualPause, setManualPause] = useState(false);
   const [motionReduced, setMotionReduced] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -77,33 +78,48 @@ function ProjectVideo({ project }: { project: Project }) {
   useEffect(() => {
     const element = wrapperRef.current;
     if (!element) return;
-    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.35 });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible = entry.isIntersecting;
+        setInView(visible);
+        if (visible) setHasBeenVisible(true);
+      },
+      { threshold: 0.35 }
+    );
     observer.observe(element);
+
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setMotionReduced(query.matches);
     update();
     query.addEventListener("change", update);
-    return () => { observer.disconnect(); query.removeEventListener("change", update); };
+
+    return () => {
+      observer.disconnect();
+      query.removeEventListener("change", update);
+    };
   }, []);
 
-  
-useEffect(() => {
-  const video = videoRef.current;
-  if (!video) return;
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-  if (!inView || manualPause || motionReduced) {
-    video.pause();
-    return;
-  }
+    if (!hasBeenVisible || !inView || manualPause || motionReduced) {
+      video.pause();
+      return;
+    }
 
-  // Reiniciar al volver a entrar en pantalla
-  video.currentTime = 0;
+    const playVideo = () => {
+      void video.play().catch(() => setPlaying(false));
+    };
 
-  void video.play().catch(() => {
-    setPlaying(false);
-  });
-}, [inView, manualPause, motionReduced]);
-
+    if (video.readyState >= 2) {
+      playVideo();
+    } else {
+      video.addEventListener("loadeddata", playVideo, { once: true });
+      return () => video.removeEventListener("loadeddata", playVideo);
+    }
+  }, [hasBeenVisible, inView, manualPause, motionReduced]);
 
   const dark = project.theme === "dark";
   return (
@@ -114,8 +130,37 @@ useEffect(() => {
           <span className="mx-auto max-w-[70%] truncate font-mono text-[9px] text-white/50 sm:text-[11px]">{project.title} · Vista real</span>
         </div>
         <div className="relative aspect-video bg-[#F7F7FF]">
-          <video ref={videoRef} src={assetUrl(project.video)} poster={project.poster ? assetUrl(project.poster) : undefined} muted playsInline loop preload="metadata" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} className="absolute inset-0 h-full w-full object-cover" aria-label={`Video de demostración de ${project.title}`} />
-          <button type="button" onClick={() => { if (playing) setManualPause(true); else { setManualPause(false); void videoRef.current?.play().catch(() => {}); } }} className="absolute bottom-3 right-3 rounded-full border border-white/20 bg-[#17192D]/85 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-violet-600 sm:bottom-4 sm:right-4" aria-label={playing ? `Pausar video de ${project.title}` : `Reproducir video de ${project.title}`}>
+          <video
+            ref={videoRef}
+            src={hasBeenVisible ? assetUrl(project.video) : undefined}
+            poster={project.poster ? assetUrl(project.poster) : undefined}
+            muted
+            playsInline
+            loop
+            preload="metadata"
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+            className="absolute inset-0 h-full w-full object-cover"
+            aria-label={`Video de demostración de ${project.title}`}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              if (playing) {
+                setManualPause(true);
+                videoRef.current?.pause();
+              } else {
+                setManualPause(false);
+                if (hasBeenVisible) {
+                  void videoRef.current?.play().catch(() => setPlaying(false));
+                } else {
+                  setHasBeenVisible(true);
+                }
+              }
+            }}
+            className="absolute bottom-3 right-3 rounded-full border border-white/20 bg-[#17192D]/85 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-violet-600 sm:bottom-4 sm:right-4"
+            aria-label={playing ? `Pausar video de ${project.title}` : `Reproducir video de ${project.title}`}
+          >
             {playing ? "Ⅱ Pausar" : "▶ Reproducir"}
           </button>
         </div>
@@ -164,30 +209,50 @@ export default function ProjectsShowcaseV2() {
   useGSAP(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Misma familia visual del Hero: formas iridiscentes, ondas y esferas.
-    // Animaciones continuas suaves, sin depender del scroll.
-    gsap.to(".projects-liquid-left", {
-      x: 25, y: -22, rotation: 8, duration: 10,
-      ease: "sine.inOut", repeat: -1, yoyo: true,
-      stagger: 1.6,
-    });
-    gsap.to(".projects-liquid-right", {
-      x: -22, y: 28, rotation: -7, duration: 12,
-      ease: "sine.inOut", repeat: -1, yoyo: true,
-      stagger: 1.6,
-    });
-    gsap.to(".projects-wave-one", {
-      x: 35, y: -15, duration: 12,
-      ease: "sine.inOut", repeat: -1, yoyo: true,
-    });
-    gsap.to(".projects-wave-two", {
-      x: -40, y: 20, duration: 15,
-      ease: "sine.inOut", repeat: -1, yoyo: true,
-    });
-    gsap.to(".projects-orb", {
-      x: 10, y: -18, duration: 5, stagger: 0.8,
-      ease: "sine.inOut", repeat: -1, yoyo: true,
-    });
+    // Animaciones decorativas: se ejecutan solo cerca de esta sección.
+    // Los ScrollTrigger de aparición y parallax permanecen independientes.
+    const decorativeTweens: gsap.core.Tween[] = [
+      gsap.to(".projects-liquid-left", {
+        x: 25, y: -22, rotation: 8, duration: 10,
+        ease: "sine.inOut", repeat: -1, yoyo: true,
+        stagger: 1.6,
+      }),
+      gsap.to(".projects-liquid-right", {
+        x: -22, y: 28, rotation: -7, duration: 12,
+        ease: "sine.inOut", repeat: -1, yoyo: true,
+        stagger: 1.6,
+      }),
+      gsap.to(".projects-wave-one", {
+        x: 35, y: -15, duration: 12,
+        ease: "sine.inOut", repeat: -1, yoyo: true,
+      }),
+      gsap.to(".projects-wave-two", {
+        x: -40, y: 20, duration: 15,
+        ease: "sine.inOut", repeat: -1, yoyo: true,
+      }),
+      gsap.to(".projects-orb", {
+        x: 10, y: -18, duration: 5, stagger: 0.8,
+        ease: "sine.inOut", repeat: -1, yoyo: true,
+      }),
+    ];
+
+    // Evita animar el fondo de proyectos mientras estamos en el Hero.
+    decorativeTweens.forEach((tween) => tween.pause());
+
+    const section = sectionRef.current;
+    const observer = section
+      ? new IntersectionObserver(
+          ([entry]) => {
+            decorativeTweens.forEach((tween) => {
+              if (entry.isIntersecting) tween.resume();
+              else tween.pause();
+            });
+          },
+          { threshold: 0, rootMargin: "100px 0px" }
+        )
+      : null;
+
+    if (section) observer?.observe(section);
 
     // Encabezado editorial: etiqueta, títulos en máscara y descripción.
     const heading = sectionRef.current?.querySelector<HTMLElement>(".v2-heading");
@@ -264,6 +329,8 @@ export default function ProjectsShowcaseV2() {
         );
       }
     });
+
+    return () => observer?.disconnect();
   }, { scope: sectionRef });
   return (
     <section

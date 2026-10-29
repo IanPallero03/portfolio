@@ -10,15 +10,21 @@ gsap.registerPlugin(useGSAP);
 export default function HeroBackground() {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
+  
+useGSAP(
+  () => {
+    const element = backgroundRef.current;
+    if (!element) return;
 
-      if (reducedMotion) return;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
-      // FORMA IRIDISCENTE IZQUIERDA
+    if (reducedMotion) return;
+
+    const animations: gsap.core.Tween[] = [];
+
+    animations.push(
       gsap.to(".liquid-shape-left", {
         x: 25,
         y: -22,
@@ -27,9 +33,10 @@ export default function HeroBackground() {
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-      });
+      })
+    );
 
-      // FORMA IRIDISCENTE DERECHA
+    animations.push(
       gsap.to(".liquid-shape-right", {
         x: -22,
         y: 28,
@@ -38,9 +45,10 @@ export default function HeroBackground() {
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-      });
+      })
+    );
 
-      // ONDA SUPERIOR
+    animations.push(
       gsap.to(".hero-wave-one", {
         x: 35,
         y: -15,
@@ -48,9 +56,10 @@ export default function HeroBackground() {
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-      });
+      })
+    );
 
-      // ONDA INFERIOR
+    animations.push(
       gsap.to(".hero-wave-two", {
         x: -40,
         y: 20,
@@ -58,9 +67,10 @@ export default function HeroBackground() {
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-      });
+      })
+    );
 
-      // ESFERAS FLOTANTES
+    animations.push(
       gsap.to(".hero-orb", {
         y: -18,
         x: 10,
@@ -69,10 +79,34 @@ export default function HeroBackground() {
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-      });
-    },
-    { scope: backgroundRef }
-  );
+      })
+    );
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        animations.forEach((animation) => {
+          if (entry.isIntersecting) {
+            animation.resume();
+          } else {
+            animation.pause();
+          }
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: "100px 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+      animations.forEach((animation) => animation.kill());
+    };
+  },
+  { scope: backgroundRef }
+);
 
   return (
     <div

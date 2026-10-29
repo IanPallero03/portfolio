@@ -1,7 +1,8 @@
 
+
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
@@ -19,17 +20,14 @@ function AnimatedScene() {
   useFrame((_, delta) => {
     const progress = Math.min(heroScrollState.progress / 0.65, 1);
 
-    // Suavizado independiente de los FPS
     const damping = 1 - Math.exp(-4 * delta);
 
-    // La cámara se acerca a la pantalla central
     camera.position.z = THREE.MathUtils.lerp(
       camera.position.z,
       8 - progress * 5,
       damping
     );
 
-    // Las pantallas laterales se separan
     if (leftScreen.current) {
       leftScreen.current.position.x = THREE.MathUtils.lerp(
         leftScreen.current.position.x,
@@ -58,7 +56,6 @@ function AnimatedScene() {
       );
     }
 
-    // La pantalla principal avanza ligeramente
     if (mainScreen.current) {
       mainScreen.current.position.z = THREE.MathUtils.lerp(
         mainScreen.current.position.z,
@@ -72,18 +69,10 @@ function AnimatedScene() {
     <>
       <ambientLight intensity={2} />
 
-      <directionalLight
-        position={[5, 5, 5]}
-        intensity={3}
-      />
+      <directionalLight position={[5, 5, 5]} intensity={3} />
 
-      {/* Pantalla izquierda */}
       <group ref={leftScreen}>
-        <Float
-          speed={1.2}
-          rotationIntensity={0.12}
-          floatIntensity={0.35}
-        >
+        <Float speed={1.2} rotationIntensity={0.12} floatIntensity={0.35}>
           <FloatingScreen
             position={[-2.6, 0.55, -2]}
             rotation={[0, 0.35, -0.12]}
@@ -92,13 +81,8 @@ function AnimatedScene() {
         </Float>
       </group>
 
-      {/* Pantalla derecha */}
       <group ref={rightScreen}>
-        <Float
-          speed={1.5}
-          rotationIntensity={0.15}
-          floatIntensity={0.3}
-        >
+        <Float speed={1.5} rotationIntensity={0.15} floatIntensity={0.3}>
           <FloatingScreen
             position={[2.6, 0.25, -1.8]}
             rotation={[0, -0.35, 0.12]}
@@ -107,13 +91,8 @@ function AnimatedScene() {
         </Float>
       </group>
 
-      {/* Pantalla principal */}
       <group ref={mainScreen}>
-        <Float
-          speed={1}
-          rotationIntensity={0.08}
-          floatIntensity={0.2}
-        >
+        <Float speed={1} rotationIntensity={0.08} floatIntensity={0.2}>
           <group scale={1.35}>
             <FloatingScreen
               position={[0, -0.35, 0.7]}
@@ -128,17 +107,55 @@ function AnimatedScene() {
 }
 
 export default function HeroScene() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(media.matches);
+
+    update();
+    media.addEventListener("change", update);
+
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0,
+        rootMargin: "100px 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="h-[420px] w-full sm:h-[540px]">
+    <div
+      ref={containerRef}
+      className="h-[420px] w-full sm:h-[540px]"
+    >
       <Canvas
+        frameloop={isVisible ? "always" : "never"}
         camera={{
           position: [0, 0, 8],
           fov: 45,
         }}
-        dpr={[1, 1.5]}
+        dpr={isMobile ? 1 : [1, 1.5]}
         gl={{
-          antialias: true,
+          antialias: !isMobile,
           alpha: true,
+          powerPreference: "low-power",
         }}
       >
         <AnimatedScene />

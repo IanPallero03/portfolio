@@ -109,7 +109,7 @@ export default function HeroIntro() {
 <Image
   src={`${
     process.env.NODE_ENV === "production" ? "/portfolio" : ""
-  }/images/imagen_principal_mejorada.png`}
+  }/images/imagen_principal_mejorada_11zon.webp`}
   alt="Retrato de Ian Pallero"
   fill
   priority
