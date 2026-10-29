@@ -73,6 +73,8 @@ function ProjectVideo({ project }: { project: Project }) {
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
   const [manualPause, setManualPause] = useState(false);
   const [motionReduced, setMotionReduced] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileRequested, setMobileRequested] = useState(false);
   const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
@@ -89,22 +91,36 @@ function ProjectVideo({ project }: { project: Project }) {
     );
     observer.observe(element);
 
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setMotionReduced(query.matches);
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const update = () => {
+      setMotionReduced(motionQuery.matches);
+      setIsMobile(mobileQuery.matches);
+    };
     update();
-    query.addEventListener("change", update);
+    motionQuery.addEventListener("change", update);
+    mobileQuery.addEventListener("change", update);
 
     return () => {
       observer.disconnect();
-      query.removeEventListener("change", update);
+      motionQuery.removeEventListener("change", update);
+      mobileQuery.removeEventListener("change", update);
     };
   }, []);
+
+  // En móviles, no asignamos src hasta que el visitante solicita reproducir.
+  // En escritorio mantenemos la carga diferida y el autoplay originales.
+  const shouldLoadVideo = isMobile ? mobileRequested : hasBeenVisible;
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (!hasBeenVisible || !inView || manualPause || motionReduced) {
+    const allowed = isMobile
+      ? mobileRequested && inView && !manualPause
+      : hasBeenVisible && inView && !manualPause && !motionReduced;
+
+    if (!allowed) {
       video.pause();
       return;
     }
@@ -119,7 +135,7 @@ function ProjectVideo({ project }: { project: Project }) {
       video.addEventListener("loadeddata", playVideo, { once: true });
       return () => video.removeEventListener("loadeddata", playVideo);
     }
-  }, [hasBeenVisible, inView, manualPause, motionReduced]);
+  }, [hasBeenVisible, inView, manualPause, motionReduced, isMobile, mobileRequested]);
 
   const dark = project.theme === "dark";
   return (
@@ -130,17 +146,30 @@ function ProjectVideo({ project }: { project: Project }) {
           <span className="mx-auto max-w-[70%] truncate font-mono text-[9px] text-white/50 sm:text-[11px]">{project.title} · Vista real</span>
         </div>
         <div className="relative aspect-video bg-[#F7F7FF]">
+          {isMobile && !mobileRequested && (
+            <div
+              className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#17192D] via-[#302754] to-[#242E57] px-4 text-center text-white"
+              style={project.poster ? {
+                backgroundImage: `linear-gradient(rgba(16,20,38,.3),rgba(16,20,38,.65)), url('${assetUrl(project.poster)}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              } : undefined}
+            >
+              <span className="font-heading text-xl font-bold sm:text-2xl">{project.title}</span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-white/75">Tocá para ver la demo</span>
+            </div>
+          )}
           <video
             ref={videoRef}
-            src={hasBeenVisible ? assetUrl(project.video) : undefined}
+            src={shouldLoadVideo ? assetUrl(project.video) : undefined}
             poster={project.poster ? assetUrl(project.poster) : undefined}
             muted
             playsInline
             loop
-            preload="metadata"
+            preload={isMobile ? "none" : "metadata"}
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
-            className="absolute inset-0 h-full w-full object-cover"
+            className={`absolute inset-0 h-full w-full object-cover ${isMobile && !mobileRequested ? "invisible" : ""}`}
             aria-label={`Video de demostración de ${project.title}`}
           />
           <button
@@ -151,7 +180,10 @@ function ProjectVideo({ project }: { project: Project }) {
                 videoRef.current?.pause();
               } else {
                 setManualPause(false);
-                if (hasBeenVisible) {
+                if (isMobile) {
+                  setMobileRequested(true);
+                  // El efecto de reproducción espera a que se carguen los datos.
+                } else if (hasBeenVisible) {
                   void videoRef.current?.play().catch(() => setPlaying(false));
                 } else {
                   setHasBeenVisible(true);
@@ -207,7 +239,12 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
 export default function ProjectsShowcaseV2() {
   const sectionRef = useRef<HTMLElement>(null);
   useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // En celulares mostramos el contenido inmediatamente, sin GSAP ni
+    // animaciones decorativas continuas. Escritorio conserva todo igual.
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(max-width: 767px)").matches
+    ) return;
 
     // Animaciones decorativas: se ejecutan solo cerca de esta sección.
     // Los ScrollTrigger de aparición y parallax permanecen independientes.

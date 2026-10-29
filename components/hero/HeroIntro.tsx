@@ -22,67 +22,78 @@ const technologies = [
 export default function HeroIntro() {
   const containerRef = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
+  
+useGSAP(
+  () => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
-      if (reduceMotion) return;
+    const isMobile = window.matchMedia(
+      "(max-width: 767px)"
+    ).matches;
 
-      const timeline = gsap.timeline({
-        defaults: {
-          ease: "power3.out",
-        },
-      });
+    // En celulares o con movimiento reducido:
+    // mostrar el contenido sin animaciones de entrada.
+    if (reduceMotion || isMobile) {
+      return;
+    }
 
-      timeline
-        .from(".hero-photo", {
+    // En escritorio conservamos las animaciones originales.
+    const timeline = gsap.timeline({
+      defaults: {
+        ease: "power3.out",
+      },
+    });
+
+    timeline
+      .from(".hero-photo", {
+        opacity: 0,
+        y: 45,
+        scale: 0.96,
+        duration: 1.1,
+      })
+      .from(
+        ".hero-label",
+        {
           opacity: 0,
-          y: 45,
-          scale: 0.96,
-          duration: 1.1,
-        })
-        .from(
-          ".hero-label",
-          {
-            opacity: 0,
-            y: 20,
-            duration: 0.7,
-          },
-          "-=0.7"
-        )
-        .from(
-          ".hero-name-line",
-          {
-            yPercent: 110,
-            duration: 1,
-            stagger: 0.13,
-          },
-          "-=0.45"
-        )
-        .from(
-          ".hero-description",
-          {
-            opacity: 0,
-            y: 25,
-            duration: 0.8,
-          },
-          "-=0.45"
-        )
-        .from(
-          ".hero-details",
-          {
-            opacity: 0,
-            y: 15,
-            duration: 0.6,
-            stagger: 0.1,
-          },
-          "-=0.35"
-        );
-    },
-    { scope: containerRef }
-  );
+          y: 20,
+          duration: 0.7,
+        },
+        "-=0.7"
+      )
+      .from(
+        ".hero-name-line",
+        {
+          yPercent: 110,
+          duration: 1,
+          stagger: 0.13,
+        },
+        "-=0.45"
+      )
+      .from(
+        ".hero-description",
+        {
+          opacity: 0,
+          y: 25,
+          duration: 0.8,
+        },
+        "-=0.45"
+      )
+      .from(
+        ".hero-details",
+        {
+          opacity: 0,
+          y: 15,
+          duration: 0.6,
+          stagger: 0.1,
+        },
+        "-=0.35"
+      );
+  },
+  { scope: containerRef }
+);
+
 
   return (
     <section

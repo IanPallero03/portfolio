@@ -16,7 +16,13 @@ export default function HeroDecorations() {
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
-      if (reducedMotion) return;
+      const isMobile = window.matchMedia(
+        "(max-width: 767px)"
+      ).matches;
+
+      // En celulares y con movimiento reducido:
+      // decoración visible, pero sin animaciones.
+      if (reducedMotion || isMobile) return;
 
       gsap.from(".hero-handwritten", {
         opacity: 0,
@@ -51,11 +57,27 @@ export default function HeroDecorations() {
     <div
       ref={decorationsRef}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-20 hidden xl:block"
+      className="pointer-events-none absolute inset-0 z-20"
     >
-      <div className="hero-handwritten absolute left-[1%] top-[28%] -rotate-12 text-center">
+      {/* TEXTO MANUSCRITO */}
+      <div
+        className="
+          hero-handwritten
+          absolute
+          left-[5%] top-[1%]
+          -rotate-6
+          text-center
+          sm:left-[3%] sm:top-[2%]
+          xl:left-[1%] xl:top-[28%] xl:-rotate-12
+        "
+      >
         <p
-          className="text-[28px] leading-[1.3] text-[#8293BA]"
+          className="
+            text-[13px] leading-[1.15]
+            text-[#8293BA]
+            sm:text-[17px]
+            xl:text-[28px] xl:leading-[1.3]
+          "
           style={{ fontFamily: "cursive" }}
         >
           Desarrollo
@@ -66,8 +88,18 @@ export default function HeroDecorations() {
         </p>
       </div>
 
+      {/* FLECHA */}
       <svg
-        className="hero-arrow absolute left-[8%] top-[46%] h-[100px] w-[115px]"
+        className="
+          hero-arrow
+          absolute
+          left-[24%] top-[7%]
+          h-[45px] w-[55px]
+          sm:left-[20%] sm:top-[9%]
+          sm:h-[65px] sm:w-[75px]
+          xl:left-[8%] xl:top-[46%]
+          xl:h-[100px] xl:w-[115px]
+        "
         viewBox="0 0 115 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
