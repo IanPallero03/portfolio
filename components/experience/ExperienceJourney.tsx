@@ -24,9 +24,10 @@ const entries = [
   },
   {
     number: "03",
-    label: "Aprendizaje autónomo",
-    title: "Proyectos propios e inglés intermedio",
-    detail: "Práctica independiente y formación autodidacta continua.",
+    label: "Desarrollo independiente",
+    title: "Proyectos propios y aprendizaje continuo",
+    detail:
+      "Desarrollo de aplicaciones web con React, integración de APIs y aprendizaje autodidacta de nuevas tecnologías.",
     color: "indigo",
   },
 ] as const;
@@ -36,7 +37,12 @@ export default function ExperienceJourney() {
 
   useGSAP(
     () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+      // En celulares, el contenido permanece visible y sin animaciones GSAP.
+      // En escritorio se conservan todas las animaciones originales.
+      if (reducedMotion || isMobile) return;
 
       gsap.fromTo(
         ".experience-heading",
@@ -68,6 +74,22 @@ export default function ExperienceJourney() {
         }
       );
       gsap.fromTo(
+        ".experience-description, .experience-language",
+        { autoAlpha: 0, y: 25 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".experience-description",
+            start: "top 88%",
+            once: true,
+          },
+        },
+      );
+      gsap.fromTo(
         ".experience-card",
         { autoAlpha: 0, y: 38, scale: 0.985 },
         {
@@ -88,7 +110,7 @@ export default function ExperienceJourney() {
           duration: 0.55,
           stagger: 0.12,
           ease: "power2.out",
-          scrollTrigger: { trigger: ".experience-card", start: "top 78%", once: true },
+          scrollTrigger: { trigger: ".experience-card", start: "top 88%", once: true },
         },
       );
       gsap.to(".experience-wave-one", { x: 30, y: -10, duration: 12, repeat: -1, yoyo: true, ease: "sine.inOut" });
@@ -115,8 +137,8 @@ export default function ExperienceJourney() {
     >
       {/* Fondo suave para mantener continuidad visual con el Hero. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-44 top-10 h-96 w-96 rounded-full bg-blue-200/35 blur-[105px]" />
-        <div className="absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-200/40 blur-[115px]" />
+        <div className="absolute -left-44 top-10 h-96 w-96 rounded-full bg-blue-200/35 blur-[40px] md:blur-[105px]" />
+        <div className="absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-200/40 blur-[45px] md:blur-[115px]" />
         <svg className="absolute inset-0 h-full w-full opacity-75" viewBox="0 0 1440 800" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="experience-wave-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
@@ -159,7 +181,7 @@ export default function ExperienceJourney() {
 
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-16">
         {/* Izquierda: un solo titular, sin repetir el mensaje dentro de la tarjeta. */}
-        <div className="experience-heading max-w-3xl">
+        <div className="max-w-3xl">
           <h2
             id="experience-title"
             className="experience-title-slide font-heading text-[clamp(3.5rem,6.4vw,7rem)] font-bold leading-[0.99] tracking-[-0.07em] text-[#17192D]"
@@ -169,14 +191,22 @@ export default function ExperienceJourney() {
             colaboración.
             </span>
           </h2>
-          <p className="mt-8 max-w-lg text-base leading-8 text-slate-600 sm:text-lg">
-            Formación universitaria, colaboración en equipo y aprendizaje continuo para crear mejores experiencias digitales.
-          </p>
+          <p className="experience-description mt-8 max-w-lg text-base leading-8 text-slate-600 sm:text-lg">
+  Combino formación universitaria, colaboración en proyectos reales
+  y desarrollo independiente para construir soluciones web
+  funcionales y bien diseñadas.
+</p>
+<div className="experience-language mt-6 inline-flex items-center gap-3 rounded-full border border-violet-200/80 bg-white/65 px-4 py-2.5">
+  <span className="h-2 w-2 rounded-full bg-violet-500" />
+  <span className="font-mono text-xs font-medium text-slate-600">
+    Inglés · Nivel intermedio
+  </span>
+</div>          
         </div>
 
         {/* Derecha: tarjeta compacta, tres menciones claras. */}
-        <article className="experience-card relative min-w-0 overflow-hidden rounded-[26px] border border-white/90 bg-white/85 p-6 shadow-[0_24px_75px_rgba(75,55,140,0.09)] backdrop-blur-xl sm:p-8 lg:p-9">
-          <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-28 h-64 w-64 rounded-full bg-violet-100/65 blur-3xl" />
+        <article className="experience-card relative min-w-0 overflow-hidden rounded-[26px] border border-white/90 bg-white/85 p-6 shadow-[0_24px_75px_rgba(75,55,140,0.09)] md:backdrop-blur-xl sm:p-8 lg:p-9">
+          <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-28 h-64 w-64 rounded-full bg-violet-100/65 blur-xl md:blur-3xl" />
           <div className="relative">
             {entries.map((item, index) => (
               <div
@@ -222,5 +252,4 @@ export default function ExperienceJourney() {
     </section>
   );
 }
-
 

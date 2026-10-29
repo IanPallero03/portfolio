@@ -27,7 +27,9 @@ export default function HeroScroll({
     () => {
       const mm = gsap.matchMedia();
 
-      // ESCRITORIO: TRANSICIÓN CINEMATOGRÁFICA ORIGINAL
+      // ==========================================
+      // ESCRITORIO: ANIMACIONES ORIGINALES
+      // ==========================================
       mm.add(
         "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
         () => {
@@ -53,6 +55,7 @@ export default function HeroScroll({
             },
           });
 
+          // Desaparece el Hero.
           timeline.to(
             contentRef.current,
             {
@@ -64,6 +67,7 @@ export default function HeroScroll({
             0
           );
 
+          // Aparece la sección narrativa.
           timeline.to(
             sceneRef.current,
             {
@@ -75,6 +79,7 @@ export default function HeroScroll({
             0.25
           );
 
+          // Animación de Diseño, Código y Creatividad.
           timeline.from(
             ".narrative-word",
             {
@@ -87,6 +92,7 @@ export default function HeroScroll({
             0.35
           );
 
+          // Animación de la descripción.
           timeline.from(
             ".narrative-description",
             {
@@ -100,120 +106,53 @@ export default function HeroScroll({
         }
       );
 
-      // MÓVIL: REVELADO PROGRESIVO SIN PIN
+      // ==========================================
+      // CELULARES: MODO RENDIMIENTO
+      // ==========================================
+      mm.add("(max-width: 767px)", () => {
+        // El Hero se muestra normalmente.
+        gsap.set(contentRef.current, {
+          autoAlpha: 1,
+          x: 0,
+          y: 0,
+          clearProps: "transform",
+        });
+
+        // La sección narrativa aparece directamente.
+        gsap.set(sceneRef.current, {
+          autoAlpha: 1,
+          x: 0,
+          y: 0,
+          clearProps: "transform",
+        });
+
+        // Sin timeline.
+        // Sin ScrollTrigger.
+        // Sin pin.
+        // Sin animaciones de entrada.
+      });
+
+      // ==========================================
+      // ACCESIBILIDAD EN ESCRITORIO
+      // ==========================================
       mm.add(
-        "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+        "(min-width: 768px) and (prefers-reduced-motion: reduce)",
         () => {
           gsap.set(contentRef.current, {
             autoAlpha: 1,
+            x: 0,
             y: 0,
+            clearProps: "transform",
           });
 
-          const scene = sceneRef.current;
-
-          if (!scene) return;
-
-          const label = scene.querySelector(".narrative-label");
-          const words = scene.querySelectorAll(".narrative-word");
-          const description = scene.querySelector(
-            ".narrative-description"
-          );
-          const marquee = scene.querySelector(".narrative-marquee");
-
-          // Animación vinculada al desplazamiento.
-          // No usamos pin ni pinSpacing.
-          const timeline = gsap.timeline({
-            defaults: {
-              ease: "power2.out",
-            },
-            scrollTrigger: {
-              trigger: scene,
-              start: "top 85%",
-              end: "center 45%",
-              toggleActions: "play none none none",
-              once: true,
-              invalidateOnRefresh: true,
-            },
+          gsap.set(sceneRef.current, {
+            autoAlpha: 1,
+            x: 0,
+            y: 0,
+            clearProps: "transform",
           });
-
-          timeline.fromTo(
-            scene,
-            {
-              autoAlpha: 0,
-              y: 35,
-            },
-            {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.3,
-              ease: "none",
-            },
-            0
-          );
-
-          if (label) {
-            timeline.from(
-              label,
-              {
-                opacity: 0,
-                y: 15,
-                duration: 0.2,
-              },
-              0.05
-            );
-          }
-
-          if (words.length) {
-            timeline.from(
-              words,
-              {
-                opacity: 0,
-                y: 45,
-                stagger: 0.12,
-                duration: 0.35,
-              },
-              0.12
-            );
-          }
-
-          if (description) {
-            timeline.from(
-              description,
-              {
-                opacity: 0,
-                y: 20,
-                duration: 0.25,
-              },
-              0.55
-            );
-          }
-
-          if (marquee) {
-            timeline.from(
-              marquee,
-              {
-                opacity: 0,
-                y: 20,
-                duration: 0.25,
-              },
-              0.7
-            );
-          }
         }
       );
-
-      // ACCESIBILIDAD
-      mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(contentRef.current, {
-          autoAlpha: 1,
-          y: 0,
-        });
-
-        gsap.set(sceneRef.current, {
-          autoAlpha: 1,
-          y: 0,
-        });
-      });
 
       return () => mm.revert();
     },

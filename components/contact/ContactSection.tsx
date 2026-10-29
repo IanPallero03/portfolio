@@ -7,11 +7,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-// Replace these links with your real contact details.
 const CONTACT = {
   email: "ianpallero@gmail.com",
   github: "https://github.com/ianpallero03",
-  linkedin: "https://www.linkedin.com/in/ian-pallero-489900258/", 
+  linkedin: "https://www.linkedin.com/in/ian-pallero-489900258/",
 };
 
 export default function ContactSection() {
@@ -19,7 +18,14 @@ export default function ContactSection() {
 
   useGSAP(
     () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+      // En celulares y con movimiento reducido, el contenido permanece
+      // visible y las decoraciones no consumen recursos animándose.
+      if (reducedMotion || isMobile) return;
 
       gsap.from(".contact-reveal", {
         y: 45,
@@ -36,10 +42,7 @@ export default function ContactSection() {
 
       gsap.fromTo(
         ".contact-title-slide",
-        {
-          x: -140,
-          autoAlpha: 0,
-        },
+        { x: -140, autoAlpha: 0 },
         {
           x: 0,
           autoAlpha: 1,
@@ -62,6 +65,7 @@ export default function ContactSection() {
         yoyo: true,
         ease: "sine.inOut",
       });
+
       gsap.to(".contact-wave", {
         x: 35,
         duration: 12,
@@ -83,8 +87,8 @@ export default function ContactSection() {
       className="relative isolate overflow-hidden bg-gradient-to-b from-[#111426] via-[#17152F] to-[#0C1122] px-5 pb-8 pt-14 sm:px-8 sm:pt-20 lg:pt-24"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-48 bottom-0 h-[450px] w-[450px] rounded-full bg-blue-600/20 blur-[110px]" />
-        <div className="absolute -right-32 top-10 h-[440px] w-[440px] rounded-full bg-violet-600/20 blur-[110px]" />
+        <div className="absolute -left-48 bottom-0 h-[450px] w-[450px] rounded-full bg-blue-600/20 blur-[45px] md:blur-[110px]" />
+        <div className="absolute -right-32 top-10 h-[440px] w-[440px] rounded-full bg-violet-600/20 blur-[45px] md:blur-[110px]" />
         <svg className="absolute inset-0 h-full w-full opacity-70" viewBox="0 0 1440 800" preserveAspectRatio="none" fill="none">
           <defs>
             <linearGradient id="contact-wave-gradient" x1="0" x2="1440" y1="0" y2="0" gradientUnits="userSpaceOnUse">
@@ -114,15 +118,14 @@ export default function ContactSection() {
           <span className="h-px min-w-0 flex-1 bg-gradient-to-r from-violet-400/75 via-blue-300/30 to-transparent" />
         </div>
 
-        {/* Editorial full-width CTA inspired by a bold SaaS landing-page ending. */}
         <div className="pb-20 sm:pb-24 lg:pb-32">
           <p className="contact-reveal mb-6 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-violet-300">
             Disponible para conectar
           </p>
           <h2
-  id="contact-title"
-  className="contact-title-slide max-w-[1350px] font-heading text-[clamp(4rem,11vw,11.75rem)] font-bold leading-[0.9] tracking-[-0.085em] text-white"
->
+            id="contact-title"
+            className="contact-title-slide max-w-[1350px] font-heading text-[clamp(4rem,11vw,11.75rem)] font-bold leading-[0.9] tracking-[-0.085em] text-white"
+          >
             ¿Creamos algo
             <span className="block bg-gradient-to-r from-violet-300 via-violet-400 to-sky-300 bg-clip-text pb-[0.12em] text-transparent">
               juntos?
