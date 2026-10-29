@@ -175,19 +175,34 @@ function ProjectVideo({ project }: { project: Project }) {
           <button
             type="button"
             onClick={() => {
+              const video = videoRef.current;
+              if (!video) return;
+
               if (playing) {
                 setManualPause(true);
-                videoRef.current?.pause();
-              } else {
-                setManualPause(false);
-                if (isMobile) {
+                video.pause();
+                return;
+              }
+
+              setManualPause(false);
+
+              if (isMobile) {
+                // Iniciamos la carga y play() dentro del toque del usuario.
+                // Esperar al useEffect puede perder la activación necesaria
+                // para reproducir en algunos navegadores móviles.
+                if (!mobileRequested) {
+                  video.src = assetUrl(project.video);
+                  video.load();
                   setMobileRequested(true);
-                  // El efecto de reproducción espera a que se carguen los datos.
-                } else if (hasBeenVisible) {
-                  void videoRef.current?.play().catch(() => setPlaying(false));
-                } else {
-                  setHasBeenVisible(true);
                 }
+                void video.play().catch((error) => {
+                  console.warn(`No se pudo reproducir ${project.title}:`, error);
+                  setPlaying(false);
+                });
+              } else if (hasBeenVisible) {
+                void video.play().catch(() => setPlaying(false));
+              } else {
+                setHasBeenVisible(true);
               }
             }}
             className="absolute bottom-3 right-3 rounded-full border border-white/20 bg-[#17192D]/85 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-violet-600 sm:bottom-4 sm:right-4"
