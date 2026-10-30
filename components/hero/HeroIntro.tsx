@@ -233,8 +233,10 @@ export default function HeroIntro() {
             </div>
           </div>
 
-          {/* DETALLES INFERIORES */}
-          <div className="hero-details mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-5 sm:mt-14">
+          
+{/* DETALLES INFERIORES: VISIBLES DESDE EL INICIO */}
+<div className="hero-footer mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-5 sm:mt-14">
+
             <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 sm:text-xs">
               Argentina · Desarrollo web
             </span>

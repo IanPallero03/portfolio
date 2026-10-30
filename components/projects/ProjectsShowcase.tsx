@@ -15,535 +15,422 @@ type Project = {
   highlights: string[];
   technologies: string[];
   video: string;
-  poster?: string;
+  poster: string;
   theme: "violet" | "blue" | "dark";
-  demo?: string;
-  github?: string;
+  demo: string;
+  github: string;
+  eyebrow: string;
+  signature: string;
 };
 
-// Prefijo necesario para los archivos de public/ en GitHub Pages.
-// En desarrollo local las rutas se mantienen sin prefijo.
-const assetBasePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
-const assetUrl = (path: string) => `${assetBasePath}${path}`;
+const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
+const asset = (path: string) => `${basePath}${path}`;
 
 const projects: Project[] = [
   {
     id: "01",
     title: "SignagePro",
-    category: "SAAS · DIGITAL SIGNAGE · TRABAJO EN EQUIPO",
-    description: "Plataforma SaaS para gestionar y distribuir contenido de forma remota en múltiples pantallas. Participé en el desarrollo Front-End, la identidad visual y la mejora de la experiencia de usuario.",
-    highlights: ["Nombre, paleta de colores y diseño del logo", "Componentes reutilizables y mejoras del dashboard", "Landing responsive, animaciones y optimización de rendimiento"],
+    eyebrow: "BUILD / 001",
+    signature: "IDENTIDAD. INTERFACES. EVOLUCIÓN.",
+    category: "SAAS · DIGITAL SIGNAGE · FRONT-END",
+    description:
+      "Plataforma SaaS para administrar contenido en pantallas de forma remota. Durante cinco meses formé parte de un equipo de desarrolladores, colaborando en la evolución del producto y su experiencia de usuario.",
+    highlights: [
+      "Adaptación responsive de la landing para distintas pantallas",
+      "Diseño del nombre, logotipo y paleta de colores del producto",
+      "Desarrollo de componentes y mejoras visuales del dashboard",
+    ],
     technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "CSS Modules", "GSAP"],
     video: "/video/signagepro.mp4",
     poster: "/images/signagepro-cover.png",
     theme: "violet",
     demo: "https://signagepro.vercel.app/",
-    github: "https://github.com/saass-Tv/SaaS-Tv-Front"
+    github: "https://github.com/saass-Tv/SaaS-Tv-Front",
   },
   {
     id: "02",
     title: "Sistema de Reservas",
-    category: "WEB APP · RESERVAS · FIREBASE",
-    description: "Sistema de reservas para un restaurante, con validación de fechas y horarios, control de capacidad y bloqueo automático de sobrecupos. Incluye un panel de administración privado con sincronización de datos.",
-    highlights: ["Reservas limitadas a la semana actual y control de disponibilidad", "Panel privado para consultar y gestionar reservas", "Firebase Authentication y sincronización mediante Firestore"],
+    eyebrow: "BUILD / 002",
+    signature: "ORGANIZACIÓN. CONTROL. CONFIANZA.",
+    category: "WEB APP · GESTIÓN DE RESERVAS",
+    description:
+      "Aplicación para que los clientes reserven mesas y el restaurante gestione sus turnos desde un panel privado. El sistema aplica reglas de negocio para mantener organizada la disponibilidad.",
+    highlights: [
+      "Validación de fechas y horarios, con límites de capacidad para evitar sobrecupos",
+      "Panel administrativo con acceso protegido mediante Firebase Authentication",
+      "Persistencia de reservas y sincronización de datos con Firestore",
+    ],
     technologies: ["React", "Vite", "Tailwind CSS", "Firebase Auth", "Firestore"],
     video: "/video/reservas.mp4",
     poster: "/images/Restaurante.webp",
     theme: "blue",
     demo: "https://ianpallero03.github.io/sistema-reservas-restaurante/",
-    github: "https://github.com/IanPallero03/sistema-reservas-restaurante"
+    github: "https://github.com/IanPallero03/sistema-reservas-restaurante",
   },
   {
     id: "03",
     title: "TrailerBox",
-    category: "MOVIE DISCOVERY · TMDB API",
-    description: "Aplicación responsive para descubrir películas, buscar por título, filtrar por géneros y categorías y visualizar tráilers mediante la API de TMDB.",
-    highlights: ["Búsqueda dinámica de películas", "Filtros por categorías y géneros", "Componentes reutilizables e integración con API externa"],
+    eyebrow: "BUILD / 003",
+    signature: "DESCUBRIR. EXPLORAR. REPRODUCIR.",
+    category: "ENTRETENIMIENTO · EXPERIENCIA WEB",
+    description:
+      "Catálogo cinematográfico interactivo pensado para explorar películas de forma ágil y visual, con una interfaz inspirada en las plataformas de streaming y adaptada a diferentes dispositivos.",
+    highlights: [
+      "Consumo de la API de TMDB para mostrar contenido actualizado",
+      "Buscador por título y navegación mediante géneros y categorías",
+      "Reproducción de tráilers e información ampliada de cada película",
+    ],
     technologies: ["React", "Vite", "JavaScript", "Tailwind CSS", "TMDB API"],
     video: "/video/trailerbox.mp4",
     poster: "/images/trailer-box_11zon.webp",
     theme: "dark",
     demo: "https://ianpallero03.github.io/TrailerBox/",
-    github: "https://github.com/IanPallero03/TrailerBox"
+    github: "https://github.com/IanPallero03/TrailerBox",
   },
 ];
 
-function ProjectVideo({ project }: { project: Project }) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
+const palettes = {
+  violet: {
+    base: "#16102C", accent: "#C9ABFF", surface: "#24183F",
+    light: "rgba(161,112,255,.26)", edge: "rgba(196,155,255,.23)",
+    gradient: "linear-gradient(125deg, #19112F 0%, #24163E 48%, #101931 100%)",
+  },
+  blue: {
+    base: "#0B1B34", accent: "#8FD9FF", surface: "#102945",
+    light: "rgba(65,165,255,.27)", edge: "rgba(137,209,255,.24)",
+    gradient: "linear-gradient(125deg, #0B1B32 0%, #122E4D 52%, #1A1640 100%)",
+  },
+  dark: {
+    base: "#100E1C", accent: "#E2B5FF", surface: "#1C1632",
+    light: "rgba(187,95,255,.22)", edge: "rgba(217,159,255,.23)",
+    gradient: "linear-gradient(125deg, #100E1C 0%, #241431 52%, #111528 100%)",
+  },
+};
+
+function ProjectPreview({ project }: { project: Project }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [inView, setInView] = useState(false);
-  const [hasBeenVisible, setHasBeenVisible] = useState(false);
-  const [manualPause, setManualPause] = useState(false);
-  const [motionReduced, setMotionReduced] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [mobileRequested, setMobileRequested] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [requested, setRequested] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const palette = palettes[project.theme];
 
   useEffect(() => {
-    const element = wrapperRef.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const visible = entry.isIntersecting;
-        setInView(visible);
-        if (visible) setHasBeenVisible(true);
-      },
-      { threshold: 0.35 }
-    );
-    observer.observe(element);
-
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const mobileQuery = window.matchMedia("(max-width: 767px)");
-    const update = () => {
-      setMotionReduced(motionQuery.matches);
-      setIsMobile(mobileQuery.matches);
-    };
-    update();
-    motionQuery.addEventListener("change", update);
-    mobileQuery.addEventListener("change", update);
-
-    return () => {
-      observer.disconnect();
-      motionQuery.removeEventListener("change", update);
-      mobileQuery.removeEventListener("change", update);
-    };
+    const el = wrapperRef.current;
+    const video = videoRef.current;
+    if (!el || !video) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) video.pause();
+    }, { threshold: 0.15 });
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
-  // En móviles, no asignamos src hasta que el visitante solicita reproducir.
-  // En escritorio mantenemos la carga diferida y el autoplay originales.
-  const shouldLoadVideo = isMobile ? mobileRequested : hasBeenVisible;
-
-  useEffect(() => {
+  const toggle = () => {
     const video = videoRef.current;
     if (!video) return;
-
-    const allowed = isMobile
-      ? mobileRequested && inView && !manualPause
-      : hasBeenVisible && inView && !manualPause && !motionReduced;
-
-    if (!allowed) {
-      video.pause();
-      return;
+    if (!video.paused) { video.pause(); return; }
+    if (!requested) {
+      video.src = asset(project.video);
+      video.load();
+      setRequested(true);
     }
+    void video.play().catch(() => setPlaying(false));
+  };
 
-    const playVideo = () => {
-      void video.play().catch(() => setPlaying(false));
-    };
-
-    if (video.readyState >= 2) {
-      playVideo();
-    } else {
-      video.addEventListener("loadeddata", playVideo, { once: true });
-      return () => video.removeEventListener("loadeddata", playVideo);
-    }
-  }, [hasBeenVisible, inView, manualPause, motionReduced, isMobile, mobileRequested]);
-
-  const dark = project.theme === "dark";
   return (
-    <div ref={wrapperRef} className={`v2-visual relative min-w-0 overflow-hidden rounded-[24px] p-3 shadow-[0_30px_80px_rgba(30,30,80,0.12)] sm:rounded-[32px] sm:p-6 lg:p-9 ${project.theme === "violet" ? "bg-gradient-to-br from-[#D8CBFF] to-[#C7DFFF]" : project.theme === "blue" ? "bg-gradient-to-br from-[#C7E2FF] to-[#AFCBFF]" : "bg-gradient-to-br from-[#292147] to-[#10111F]"}`}>
-      <div className={`v2-video-depth relative overflow-hidden rounded-[14px] border-[5px] shadow-[0_20px_55px_rgba(0,0,0,0.2)] sm:rounded-[20px] sm:border-[8px] ${dark ? "border-[#080913] bg-[#080913]" : "border-[#17192D] bg-[#17192D]"}`}>
-        <div className="flex h-8 items-center gap-1.5 px-3 sm:h-10 sm:px-4">
-          <span className="h-2 w-2 rounded-full bg-red-400"/><span className="h-2 w-2 rounded-full bg-yellow-400"/><span className="h-2 w-2 rounded-full bg-green-400"/>
-          <span className="mx-auto max-w-[70%] truncate font-mono text-[9px] text-white/50 sm:text-[11px]">{project.title} · Vista real</span>
-        </div>
-        <div className="relative aspect-video bg-[#F7F7FF]">
-          {isMobile && !mobileRequested && (
-            <div
-              className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#17192D] via-[#302754] to-[#242E57] px-4 text-center text-white"
-              style={project.poster ? {
-                backgroundImage: `linear-gradient(rgba(16,20,38,.3),rgba(16,20,38,.65)), url('${assetUrl(project.poster)}')`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              } : undefined}
-            >
-              <span className="font-heading text-xl font-bold sm:text-2xl">{project.title}</span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-white/75">Tocá para ver la demo</span>
+    <div ref={wrapperRef} className="relative min-w-0">
+      {/* Marco editorial: no simula una ventana del navegador. */}
+      <div className="relative overflow-hidden rounded-[18px] border border-white/20 bg-[#070B18] shadow-[0_32px_90px_rgba(0,0,0,.4)] lg:rounded-[26px]">
+        <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-white/[.045] px-4 py-2.5 sm:px-5">
+          <div className="flex min-w-0 items-center gap-3">
+            <svg viewBox="0 0 32 32" fill="none" className="h-7 w-7 shrink-0" aria-hidden="true">
+              <path d="M16 2 29 9v14L16 30 3 23V9L16 2Z" stroke={palette.accent} strokeWidth="1.4" />
+              <path d="M16 8v16M8 16h16M10.3 10.3l11.4 11.4M21.7 10.3 10.3 21.7" stroke={palette.accent} strokeWidth=".8" opacity=".65" />
+              <circle cx="16" cy="16" r="3" fill={palette.accent} />
+            </svg>
+            <div className="min-w-0">
+              <p className="font-mono text-[9px] font-bold uppercase tracking-[.22em] text-white/90 sm:text-[10px]">PROJECT / VISUALIZER</p>
+              <p className="mt-0.5 truncate font-mono text-[9px] tracking-[.08em] text-white/45">{project.eyebrow} · PREVIEW REAL</p>
             </div>
-          )}
+          </div>
+          <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.16em]" style={{ color: palette.accent }}>
+            <span className="relative inline-flex h-2 w-2">
+              <span className="absolute inset-0 rounded-full bg-current opacity-30" />
+              <span className="relative m-[2px] h-1 w-1 rounded-full bg-current" />
+            </span>
+            <span className="hidden sm:inline">DEMO DISPONIBLE</span><span className="sm:hidden">DEMO</span>
+          </div>
+        </div>
+
+        <div className="relative aspect-video overflow-hidden bg-[#090D1B] lg:aspect-[2.1/1] xl:aspect-[2.15/1]">
+          {/* La portada se ve siempre sin descargar el mp4. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={asset(project.poster)} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
           <video
             ref={videoRef}
-            src={shouldLoadVideo ? assetUrl(project.video) : undefined}
-            poster={project.poster ? assetUrl(project.poster) : undefined}
-            muted
+            preload="none"
             playsInline
+            muted
             loop
-            preload={isMobile ? "none" : "metadata"}
+            poster={asset(project.poster)}
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
-            className={`absolute inset-0 h-full w-full object-cover ${isMobile && !mobileRequested ? "invisible" : ""}`}
-            aria-label={`Video de demostración de ${project.title}`}
+            aria-label={`Vista en video de ${project.title}`}
+            className={`absolute inset-0 h-full w-full object-cover ${requested ? "opacity-100" : "opacity-0"}`}
           />
+          {!playing && (
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#080C18]/65 via-transparent to-[#080C18]/10" />
+          )}
+          {/* Control técnico discreto; sin etiquetas encima del video. */}
           <button
             type="button"
-            onClick={() => {
-              const video = videoRef.current;
-              if (!video) return;
-
-              if (playing) {
-                setManualPause(true);
-                video.pause();
-                return;
-              }
-
-              setManualPause(false);
-
-              if (isMobile) {
-                // Iniciamos la carga y play() dentro del toque del usuario.
-                // Esperar al useEffect puede perder la activación necesaria
-                // para reproducir en algunos navegadores móviles.
-                if (!mobileRequested) {
-                  video.src = assetUrl(project.video);
-                  video.load();
-                  setMobileRequested(true);
-                }
-                void video.play().catch((error) => {
-                  console.warn(`No se pudo reproducir ${project.title}:`, error);
-                  setPlaying(false);
-                });
-              } else if (hasBeenVisible) {
-                void video.play().catch(() => setPlaying(false));
-              } else {
-                setHasBeenVisible(true);
-              }
-            }}
-            className="absolute bottom-3 right-3 rounded-full border border-white/20 bg-[#17192D]/85 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-violet-600 sm:bottom-4 sm:right-4"
-            aria-label={playing ? `Pausar video de ${project.title}` : `Reproducir video de ${project.title}`}
+            onClick={toggle}
+            aria-label={`${playing ? "Pausar" : "Reproducir"} video de ${project.title}`}
+            title={playing ? "Pausar video" : "Reproducir video"}
+            className="group absolute bottom-3 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-[9px] border bg-[#090D1B]/85 text-white shadow-[0_6px_18px_rgba(0,0,0,.25)] transition-[transform,background-color,border-color] duration-200 hover:scale-100 hover:bg-[#151B30] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:bottom-1 sm:right-1 sm:h-8 sm:w-8"
+            style={{ borderColor: palette.edge }}
           >
-            {playing ? "Ⅱ Pausar" : "▶ Reproducir"}
+            {playing ? (
+              <svg viewBox="0 0 24 24" className="h-[17px] w-[17px]" aria-hidden="true" fill="currentColor" style={{ color: palette.accent }}>
+                <rect x="6" y="5" width="4" height="14" rx="1" />
+                <rect x="14" y="5" width="4" height="14" rx="1" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="h-[17px] w-[17px] cursor-pointer" aria-hidden="true" fill="currentColor" style={{ color: palette.accent }}>
+                <path d="M8 5.5a1 1 0 0 1 1.54-.84l10 6.5a1 1 0 0 1 0 1.68l-10 6.5A1 1 0 0 1 8 18.5z" />
+              </svg>
+            )}
           </button>
         </div>
+        <div className="relative z-10 flex min-h-[38px] items-center justify-between gap-4 border-t border-white/10 bg-[#080D1B] px-4 py-2 font-mono text-[9px] uppercase tracking-[.12em] text-white/50 sm:px-5">
+          <span className="truncate">{project.signature}</span>
+          <span className="shrink-0" style={{ color: palette.accent }}>IP / 2026 ↗</span>
+        </div>
       </div>
-      <span className={`mt-4 block text-right font-mono text-[10px] uppercase tracking-[0.18em] ${dark ? "text-white/55" : "text-[#33325A]/55"}`}>Vista real del proyecto · {project.id} / 03</span>
+      <div className="pointer-events-none absolute -inset-[6px] -z-10 rounded-[28px] border opacity-50" style={{ borderColor: palette.edge }} aria-hidden="true" />
     </div>
   );
 }
 
-function ProjectRow({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project }: { project: Project }) {
+  const p = palettes[project.theme];
   return (
-    <article className="v2-project relative grid items-center gap-9 border-t border-[#17192D]/10 py-16 sm:py-24 lg:grid-cols-2 lg:gap-16 lg:py-32">
-      <div className={`v2-copy min-w-0 ${index % 2 ? "lg:order-2" : ""}`}>
-        <div className="mb-7 flex items-center gap-4 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-600">
-          <span>{project.id} / 03</span><span className="h-px w-10 bg-violet-400"/><span className="text-slate-500">{project.category}</span>
-        </div>
-        <h3
-          aria-label={project.title}
-          className="v2-title break-words font-heading text-[clamp(3.3rem,6.2vw,7rem)] font-bold leading-[0.94] tracking-[-0.075em] text-[#17192D]"
-        >
-          {project.title.split(" ").map((word, wordIndex) => (
-            <span key={`${project.id}-${wordIndex}`} aria-hidden="true" className="inline-block overflow-hidden align-bottom pb-[0.08em]">
-              <span className="v2-word inline-block">{word}</span>
-              {wordIndex < project.title.split(" ").length - 1 && <span className="inline-block whitespace-pre"> </span>}
-            </span>
-          ))}
-          <span aria-hidden="true" className="v2-word inline-block text-[#8B5CF6]">.</span>
-        </h3>
-        <p className="mt-7 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">{project.description}</p>
-        <ul className="mt-6 max-w-xl space-y-2.5 text-sm leading-relaxed text-slate-600">
-          {project.highlights.map((item) => <li key={item} className="flex gap-3"><span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500"/>{item}</li>)}
-        </ul>
-        <div className="mt-7 flex flex-wrap gap-2">{project.technologies.map((tech) => <span key={tech} className="rounded-full border border-violet-200 bg-white/80 px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-wider text-violet-700">{tech}</span>)}</div>
-        <div className="mt-9 flex flex-wrap gap-3">
-          {project.demo && <a href={project.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#17192D] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-600">Ver proyecto <span aria-hidden="true">↗</span></a>}
-          {project.github && <a href={project.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#17192D]/20 px-6 py-3 text-sm font-semibold text-[#17192D] transition hover:border-violet-500 hover:text-violet-600">Ver código <span aria-hidden="true">↗</span></a>}
-        </div>
+    <article className="relative isolate flex h-full min-h-0 w-full flex-col justify-between overflow-hidden rounded-[27px] border border-white/[.15] px-5 py-6 text-white shadow-[0_45px_120px_rgba(0,0,0,.4)] sm:px-8 lg:px-9 lg:py-5" style={{ background: p.gradient }}>
+      {/* Capa para oscurecer las tarjetas secundarias sin transparentar sus textos. */}
+      <div aria-hidden="true" className="orbit-card-dimmer pointer-events-none absolute inset-0 z-20 rounded-[27px] bg-[#050817] opacity-0" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -right-[10%] -top-[45%] aspect-square w-[70%] rounded-full" style={{ background: `radial-gradient(circle,${p.light} 0%,transparent 65%)` }} />
+        <div className="absolute left-[43%] top-[-38%] text-[clamp(10rem,26vw,32rem)] font-black leading-none tracking-tighter text-white/[.035]">{project.id}</div>
+        <svg viewBox="0 0 1100 700" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full opacity-30" fill="none" aria-hidden="true">
+          <ellipse cx="690" cy="370" rx="570" ry="235" stroke={p.accent} strokeWidth="1" transform="rotate(-23 690 370)" strokeDasharray="4 13" />
+          <ellipse cx="690" cy="370" rx="480" ry="170" stroke={p.accent} strokeWidth=".7" transform="rotate(-23 690 370)" />
+        </svg>
       </div>
-      <div className={`min-w-0 ${index % 2 ? "lg:order-1" : ""}`}><ProjectVideo project={project}/></div>
+      <div className="relative z-10 mb-3 flex items-center justify-between gap-3 border-b border-white/15 pb-2.5 font-mono text-[9px] uppercase tracking-[.22em] sm:text-[10px]">
+        <div className="flex min-w-0 items-center gap-2" style={{ color: p.accent }}><span className="text-white/80">IP—</span><span>SELECTED WORKS</span><span className="text-white/35">/ {project.id}</span></div>
+        <span className="hidden text-white/55 sm:block">CREATIVE ENGINEERING</span>
+      </div>
+      <div className="relative z-10 grid min-h-0 items-center gap-6 lg:grid-cols-[.90fr_1.10fr] lg:gap-7 xl:gap-9">
+        <div className="min-w-0">
+          <div className="mb-2 flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[.15em] sm:text-[10px]" style={{ color: p.accent }}>
+            <span className="h-px w-6 bg-current" /><span>{project.category}</span>
+          </div>
+          <h3 className="font-heading text-[clamp(2.3rem,9vw,4.5rem)] font-bold leading-[.96] tracking-[-.075em] lg:text-[clamp(2.25rem,3.65vw,4.5rem)] lg:leading-[.93]" style={{ overflowWrap: "anywhere" }}>
+            {project.title}<span style={{ color: p.accent }}>.</span>
+          </h3>
+          <p className="mt-4 max-w-xl text-[13px] leading-[1.65] text-white/75 lg:mt-3 lg:text-[12px] lg:leading-[1.55] xl:text-[14px]">{project.description}</p>
+          <div className="mt-4 space-y-2 lg:mt-3 lg:hidden xl:block xl:space-y-1">
+            {project.highlights.slice(0, 2).map((highlight) => (
+              <p key={highlight} className="flex gap-2 text-[12px] leading-relaxed text-white/65 lg:text-[11px]"><span style={{ color: p.accent }}>✦</span>{highlight}</p>
+            ))}
+          </div>
+          <div className="mt-5 flex flex-wrap gap-2 lg:mt-3 lg:gap-1.5">
+            {project.technologies.map((tech) => <span key={tech} className="rounded-full border border-white/20 bg-white/[.07] px-3 py-1.5 font-mono text-[10px] text-white/85 lg:px-2.5 lg:py-1 lg:text-[9px]">{tech}</span>)}
+          </div>
+          <div className="mt-6 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-2.5 lg:mt-4">
+            <a href={project.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-3 py-3 text-[11px] font-bold sm:px-5 sm:py-2.5 text-[#161427] transition hover:-translate-y-0.5 hover:bg-violet-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Ver proyecto <span aria-hidden="true">↗</span></a>
+            <a href={project.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-3 py-3 text-[11px] font-bold sm:px-5 sm:py-2.5 text-white transition hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Ver código <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div className="min-w-0 lg:w-full lg:max-w-[530px] lg:justify-self-end"><ProjectPreview project={project} /></div>
+      </div>
+      <div className="relative z-10 mt-7 flex w-full shrink-0 flex-wrap items-center justify-between gap-x-5 gap-y-2 border-t border-white/15 pt-4 font-mono text-[9px] uppercase tracking-[.12em] text-white/45 lg:mt-5 lg:gap-6 lg:tracking-[.15em]">
+        <span className="min-w-0">DESIGN / DEVELOPMENT</span><span className="shrink-0 whitespace-nowrap text-right">PROJECT {project.id} OF 03</span>
+      </div>
     </article>
   );
 }
 
 export default function ProjectsShowcaseV2() {
   const sectionRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
   useGSAP(() => {
-    // Las animaciones de entrada funcionan en desktop y mobile.
-    // Respetamos la preferencia del usuario por movimiento reducido.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const stage = stageRef.current;
+    const track = trackRef.current;
+    if (!stage || !track) return;
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+      const cards = gsap.utils.toArray<HTMLElement>(track.querySelectorAll(".orbit-premium-card"));
+      if (cards.length !== 3) return;
 
-    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      // Nunca transparentamos las tarjetas: sus fondos ocultan de verdad
+      // los textos de las tarjetas que están detrás.
+      const positions = {
+        center: { xPercent: 0, yPercent: 0, scale: 1, rotationY: 0, rotationZ: 0 },
+        right: { xPercent: 69, yPercent: -8, scale: .58, rotationY: -35, rotationZ: 5 },
+        left: { xPercent: -69, yPercent: 9, scale: .5, rotationY: 35, rotationZ: -5 },
+      };
+      const dimmers = cards.map(card => card.querySelector<HTMLElement>(".orbit-card-dimmer"));
+      gsap.set(cards, { transformPerspective: 1600, transformOrigin: "50% 50%", backfaceVisibility: "hidden", force3D: true });
+      gsap.set(cards[0], { ...positions.center, zIndex: 3 });
+      gsap.set(cards[1], { ...positions.right, zIndex: 2 });
+      gsap.set(cards[2], { ...positions.left, zIndex: 1 });
+      gsap.set(dimmers[0], { opacity: 0 });
+      gsap.set(dimmers[1], { opacity: .56 });
+      gsap.set(dimmers[2], { opacity: .74 });
 
-    // Animaciones decorativas: se ejecutan solo cerca de esta sección.
-    // Los ScrollTrigger de aparición y parallax permanecen independientes.
-    const decorativeTweens: gsap.core.Tween[] = isMobile ? [] : [
-      gsap.to(".projects-liquid-left", {
-        x: 25, y: -22, rotation: 8, duration: 10,
-        ease: "sine.inOut", repeat: -1, yoyo: true,
-        stagger: 1.6,
-      }),
-      gsap.to(".projects-liquid-right", {
-        x: -22, y: 28, rotation: -7, duration: 12,
-        ease: "sine.inOut", repeat: -1, yoyo: true,
-        stagger: 1.6,
-      }),
-      gsap.to(".projects-wave-one", {
-        x: 35, y: -15, duration: 12,
-        ease: "sine.inOut", repeat: -1, yoyo: true,
-      }),
-      gsap.to(".projects-wave-two", {
-        x: -40, y: 20, duration: 15,
-        ease: "sine.inOut", repeat: -1, yoyo: true,
-      }),
-      gsap.to(".projects-orb", {
-        x: 10, y: -18, duration: 5, stagger: 0.8,
-        ease: "sine.inOut", repeat: -1, yoyo: true,
-      }),
-    ];
+      let last = -1;
+      const activate = (index: number) => {
+        if (index === last) return;
+        last = index;
+        cards.forEach((card, i) => {
+          card.style.pointerEvents = i === index ? "auto" : "none";
+          card.inert = i !== index;
+          if (i !== index) card.querySelectorAll("video").forEach(v => v.pause());
+        });
+      };
+      activate(0);
 
-    // Evita animar el fondo de proyectos mientras estamos en el Hero.
-    decorativeTweens.forEach((tween) => tween.pause());
-
-    const section = sectionRef.current;
-    const observer = section && decorativeTweens.length > 0
-      ? new IntersectionObserver(
-          ([entry]) => {
-            decorativeTweens.forEach((tween) => {
-              if (entry.isIntersecting) tween.resume();
-              else tween.pause();
-            });
-          },
-          { threshold: 0, rootMargin: "100px 0px" }
-        )
-      : null;
-
-    if (section) observer?.observe(section);
-
-    // Encabezado editorial: etiqueta, títulos en máscara y descripción.
-    const heading = sectionRef.current?.querySelector<HTMLElement>(".v2-heading");
-    if (heading) {
-      const headingTl = gsap.timeline({
+      // La carta entrante ocupa la capa superior, pero permanece opaca.
+      // El oscurecimiento crea profundidad SIN mezclar textos de dos proyectos.
+      const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: heading,
-          start: "top 85%",
-          once: true,
+          trigger: stage,
+          // Dejamos espacio bajo el navbar fijo de escritorio.
+          start: "top top+=88",
+          end: "+=2200",
+          scrub: 0.95,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            activate(self.progress < .28 ? 0 : self.progress < .69 ? 1 : 2);
+          },
         },
       });
+      tl.to({}, { duration: .18 })
+        .set(cards[1], { zIndex: 4 })
+        .to(cards[0], { ...positions.left, duration: 1.35, ease: "none" })
+        .to(cards[1], { ...positions.center, duration: 1.35, ease: "none" }, "<")
+        .to(cards[2], { ...positions.right, duration: 1.35, ease: "none" }, "<")
+        .to(dimmers[0], { opacity: .74, duration: 1.35, ease: "none" }, "<")
+        .to(dimmers[1], { opacity: 0, duration: 1.35, ease: "none" }, "<")
+        .to(dimmers[2], { opacity: .56, duration: 1.35, ease: "none" }, "<")
+        .to({}, { duration: .52 })
+        .set(cards[2], { zIndex: 5 })
+        .to(cards[1], { ...positions.left, duration: 1.35, ease: "none" })
+        .to(cards[2], { ...positions.center, duration: 1.35, ease: "none" }, "<")
+        .to(cards[0], { ...positions.right, duration: 1.35, ease: "none" }, "<")
+        .to(dimmers[0], { opacity: .56, duration: 1.35, ease: "none" }, "<")
+        .to(dimmers[1], { opacity: .74, duration: 1.35, ease: "none" }, "<")
+        .to(dimmers[2], { opacity: 0, duration: 1.35, ease: "none" }, "<")
+        .to({}, { duration: .24 });
 
-      headingTl
-        .fromTo(".v2-heading-label", { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.65, ease: "power2.out" })
-        .fromTo(".v2-heading-line", { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "power3.out" }, "-=0.35")
-        .fromTo(".v2-heading-word", { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: 1.1, stagger: 0.16, ease: "power4.out" }, "-=0.5")
-        .fromTo(".v2-heading-description", { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.85, ease: "power3.out" }, "-=0.55")
-        .fromTo(".v2-heading-footer", { autoAlpha: 0, y: 15 }, { autoAlpha: 1, y: 0, duration: 0.65, ease: "power2.out" }, "-=0.4");
-    }
-
-    const rows = gsap.utils.toArray<HTMLElement>(".v2-project");
-
-    rows.forEach((row, index) => {
-      const copy = row.querySelector<HTMLElement>(".v2-copy");
-      const visual = row.querySelector<HTMLElement>(".v2-visual");
-      const depth = row.querySelector<HTMLElement>(".v2-video-depth");
-      const words = gsap.utils.toArray<HTMLElement>(row.querySelectorAll(".v2-word"));
-      if (!copy || !visual) return;
-
-      // La información entra desde el lateral correspondiente.
-      gsap.fromTo(copy,
-        { autoAlpha: 0, x: index % 2 === 0 ? (isMobile ? -28 : -55) : (isMobile ? 28 : 55) },
-        {
-          autoAlpha: 1, x: 0, duration: 1, ease: "power3.out",
-          scrollTrigger: { trigger: row, start: "top 82%", once: true },
-        }
+      return () => {
+        tl.kill();
+        cards.forEach(card => { card.inert = false; card.style.pointerEvents = ""; });
+        gsap.set(cards, { clearProps: "all" });
+        gsap.set(dimmers, { clearProps: "all" });
+      };
+    });
+    // En celulares y tablets: recorrido vertical, sin pin ni scrub continuo.
+    // La animación es de una sola entrada y respeta prefers-reduced-motion.
+    mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+      const cards = gsap.utils.toArray<HTMLElement>(
+        track.querySelectorAll(".orbit-premium-card")
       );
 
-      // El título se revela palabra por palabra, después del inicio del texto.
-      if (words.length) {
-        gsap.fromTo(words,
-          { autoAlpha: 0, yPercent: 105, rotate: 2 },
+      cards.forEach((card, index) => {
+        // Un desplazamiento corto y una inclinación leve recuerdan la órbita
+        // sin sobrecargar el scroll del celular.
+        gsap.fromTo(
+          card,
+          { autoAlpha: 0, y: 36, x: index % 2 === 0 ? -12 : 12, rotation: index % 2 === 0 ? -1.2 : 1.2 },
           {
-            autoAlpha: 1, yPercent: 0, rotate: 0,
-            duration: 0.9, stagger: 0.13, ease: "power3.out",
-            scrollTrigger: { trigger: row, start: "top 80%", once: true },
-          }
-        );
-      }
-
-      // Aparición del marco de video.
-      gsap.fromTo(visual,
-        { autoAlpha: 0, y: isMobile ? 35 : 85, scale: isMobile ? 0.98 : 0.94 },
-        {
-          autoAlpha: 1, y: 0, scale: 1, duration: 1.15, ease: "power3.out",
-          scrollTrigger: { trigger: row, start: "top 83%", once: true },
-        }
-      );
-
-      // El parallax se mantiene solo en escritorio para evitar trabajo
-      // continuo de ScrollTrigger durante el scroll en celulares.
-      if (depth && window.matchMedia("(min-width: 768px)").matches) {
-        gsap.fromTo(depth,
-          { y: -14 },
-          {
-            y: 14, ease: "none",
+            autoAlpha: 1,
+            y: 0,
+            x: 0,
+            rotation: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            clearProps: "transform,opacity,visibility",
             scrollTrigger: {
-              trigger: row,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1.2,
-              invalidateOnRefresh: true,
+              trigger: card,
+              start: "top 90%",
+              once: true,
             },
           }
         );
-      }
+      });
     });
 
-    return () => observer?.disconnect();
+    return () => mm.revert();
   }, { scope: sectionRef });
+
   return (
-    <section
-  id="proyectos"
-  ref={sectionRef}
-  className="relative isolate overflow-hidden bg-[#F8FAFF] px-4 pb-24 pt-4 sm:px-8 sm:pt-10 lg:pt-16"
->
-      {/* Fondo inspirado en HeroBackground: iridiscencias, ondas y esferas.
-          Es decorativo y no intercepta clics ni interacción con los videos. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
-        style={{
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 5%, black 94%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 5%, black 94%, transparent 100%)",
-        }}
-      >
-        <div className="absolute inset-0 bg-[linear-gradient(165deg,#F7F5FF_0%,#F1F5FF_30%,#F9F8FF_55%,#EEF5FF_78%,#F8F5FF_100%)]" />
+    <section id="proyectos" ref={sectionRef} className="relative bg-[#080B18] pb-20 pt-14 text-white lg:pt-20">
+      <header className="relative z-10 mx-auto max-w-[1380px] px-5 pb-8 sm:px-10 lg:pb-0">
+        <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[.24em] text-violet-300">
+          <span>IP® — CREATIVE PORTFOLIO</span><span className="text-white/45">SELECTED WORK / 2026</span>
+        </div>
+        <div className="mt-5 flex flex-wrap items-end justify-between gap-4 lg:gap-10">
+          <div>
+            <h2 className="font-heading text-[clamp(3rem,6.2vw,6.5rem)] font-bold leading-[.95] tracking-[-.075em]">
+              Proyectos <span className="bg-gradient-to-r from-[#D5B8FF] via-[#B9B4FF] to-[#7EC9FF] bg-clip-text text-transparent">destacados.</span>
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/60 sm:text-base">
+              Una selección de proyectos donde combino desarrollo Front-End, diseño de interfaces y soluciones funcionales. Deslizá para explorar cada experiencia.
+            </p>
+          </div>
+          <div className="hidden items-center gap-2 font-mono text-[10px] uppercase tracking-[.18em] text-white/50 lg:flex">
+            <span className="h-2 w-2 rounded-full bg-violet-300" /><span>EXPLORE THE SYSTEM ↓</span>
+          </div>
+        </div>
+      </header>
 
-        {/* MOBILE: acentos y ondas estaticas, sin GSAP ni filtros pesados. */}
-        <div className="absolute inset-0 md:hidden">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse at 0% 18%, rgba(147,197,253,0.19), transparent 48%), radial-gradient(ellipse at 100% 68%, rgba(196,181,253,0.22), transparent 52%)",
-            }}
-          />
-          <svg
-            className="absolute inset-0 h-full w-full opacity-70"
-            viewBox="0 0 390 1400"
-            preserveAspectRatio="none"
-            fill="none"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="projectsWaveMobile" x1="0" y1="0" x2="390" y2="0" gradientUnits="userSpaceOnUse">
-                <stop offset="0" stopColor="#93C5FD" stopOpacity="0.10" />
-                <stop offset="0.5" stopColor="#A78BFA" stopOpacity="0.43" />
-                <stop offset="1" stopColor="#60A5FA" stopOpacity="0.10" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M-110 180 C 60 75, 190 325, 500 145 M-130 610 C 100 455, 230 750, 510 540 M-90 1110 C 90 960, 260 1270, 510 1060"
-              stroke="url(#projectsWaveMobile)"
-              strokeWidth="1.8"
-            />
-            <path
-              d="M-100 270 C 75 135, 215 420, 520 260 M-100 700 C 70 555, 245 860, 510 675 M-100 1200 C 90 1030, 270 1370, 500 1160"
-              stroke="url(#projectsWaveMobile)"
-              strokeWidth="1.2"
-              opacity="0.55"
-            />
+      <div ref={stageRef} className="relative mx-auto w-full px-4 sm:px-6 lg:flex lg:h-[calc(100svh-88px)] lg:min-h-0 lg:items-center lg:justify-center lg:px-9 lg:pb-5 lg:pt-4" style={{ perspective: "1700px" }}>
+        {/* Espacio orbital: todo estático salvo la transformación de las tarjetas. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block">
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 48%,rgba(122,75,220,.21),transparent 52%),radial-gradient(ellipse at 92% 25%,rgba(58,141,247,.12),transparent 43%)" }} />
+          <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" fill="none">
+            <ellipse cx="720" cy="400" rx="655" ry="275" stroke="#BFA0FF" strokeOpacity=".18" strokeWidth="1" strokeDasharray="3 10" transform="rotate(-14 720 400)" />
+            <ellipse cx="720" cy="400" rx="545" ry="215" stroke="#8AC9FF" strokeOpacity=".13" strokeWidth="1" transform="rotate(-14 720 400)" />
+            <circle cx="163" cy="356" r="4" fill="#D6B8FF" opacity=".7" /><circle cx="1290" cy="540" r="3" fill="#8AC9FF" opacity=".65" />
+            <path d="M40 400H145 M1295 400H1400" stroke="#C4B5FD" strokeOpacity=".26" strokeDasharray="4 8" />
           </svg>
+          <span className="absolute left-[3%] top-[23%] font-mono text-[10px] tracking-[.25em] text-violet-200/35">SYS / ORBIT—01</span>
+          <span className="absolute bottom-[25%] right-[3%] font-mono text-[10px] tracking-[.25em] text-blue-200/35">DEPTH / 1600</span>
         </div>
 
-        {/* Luces ambientales similares a las del Hero */}
-        <div className="hidden md:block absolute -left-40 top-[15%] h-[450px] w-[450px] rounded-full bg-blue-200/35 blur-[45px] md:blur-[110px]" />
-        <div className="hidden md:block absolute -right-40 top-[42%] h-[500px] w-[500px] rounded-full bg-violet-200/40 blur-[50px] md:blur-[120px]" />
-        <div className="hidden md:block absolute -left-40 bottom-[5%] h-[450px] w-[450px] rounded-full bg-violet-200/30 blur-[45px] md:blur-[115px]" />
-
-        {/* Ondas SVG a lo largo de la sección; ID único para evitar conflictos con Hero */}
-        <svg
-          className="hidden md:block absolute inset-0 h-full w-full opacity-80"
-          viewBox="0 0 1600 2400"
-          preserveAspectRatio="none"
-          fill="none"
-        >
-          <defs>
-            <linearGradient id="projectsWaveGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#93C5FD" stopOpacity="0" />
-              <stop offset="40%" stopColor="#A78BFA" stopOpacity="0.4" />
-              <stop offset="70%" stopColor="#60A5FA" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path className="projects-wave-one" d="M-100 340 C250 130 390 590 770 365 S1320 160 1750 390 M-100 1450 C280 1220 470 1640 850 1440 S1320 1230 1750 1470" stroke="url(#projectsWaveGradient)" strokeWidth="2" />
-          <path className="projects-wave-two" d="M-100 920 C300 700 470 1130 850 925 S1320 730 1750 970 M-100 2050 C250 1850 450 2260 850 2050 S1320 1840 1750 2090" stroke="url(#projectsWaveGradient)" strokeWidth="2" />
-        </svg>
-
-        {/* Formas iridiscentes: ubicadas en los bordes para no tapar contenido */}
-        <div className="projects-liquid-right hidden md:block absolute -right-[200px] top-[160px] h-[340px] w-[340px] opacity-65 md:-right-[10px] md:top-[180px] md:h-[440px] md:w-[440px]">
-          <div className="h-full w-full rounded-[48%_52%_62%_38%/42%_45%_55%_58%]" style={{
-            background: "radial-gradient(ellipse at 28% 24%, #ffffff 0%, #e9d5ff 18%, #b9b5ff 42%, #93c5fd 65%, #c4b5fd 82%, #ffffff 100%)",
-            boxShadow: "inset 22px 25px 45px rgba(255,255,255,0.85), inset -35px -35px 65px rgba(99,102,241,0.25), 20px 25px 75px rgba(139,92,246,0.12)",
-            filter: "blur(1px)",
-          }} />
-        </div>
-        <div className="projects-liquid-right hidden md:block absolute -right-[200px] top-[35%] h-[390px] w-[390px] opacity-70 md:-right-[165px] md:h-[510px] md:w-[510px]">
-          <div className="h-full w-full rounded-[58%_42%_35%_65%/42%_58%_42%_58%]" style={{
-            background: "radial-gradient(ellipse at 30% 25%, #ffffff 0%, #e9d5ff 15%, #c4b5fd 38%, #93c5fd 63%, #a78bfa 82%, #dbeafe 100%)",
-            boxShadow: "inset 30px 30px 55px rgba(255,255,255,0.9), inset -45px -40px 75px rgba(99,102,241,0.25), -20px 30px 90px rgba(59,130,246,0.12)",
-            filter: "blur(1px)",
-          }} />
-        </div>
-        <div className="projects-liquid-left hidden md:block absolute -left-[195px] bottom-[5%] h-[340px] w-[340px] opacity-60 md:-left-[155px] md:h-[440px] md:w-[440px]">
-          <div className="h-full w-full rounded-[48%_52%_62%_38%/42%_45%_55%_58%]" style={{
-            background: "radial-gradient(ellipse at 28% 24%, #ffffff 0%, #e9d5ff 18%, #b9b5ff 42%, #93c5fd 65%, #c4b5fd 82%, #ffffff 100%)",
-            boxShadow: "inset 22px 25px 45px rgba(255,255,255,0.85), inset -35px -35px 65px rgba(99,102,241,0.25), 20px 25px 75px rgba(139,92,246,0.12)",
-            filter: "blur(1px)",
-          }} />
+        <div ref={trackRef} className="relative z-10 mx-auto flex w-full max-w-[1210px] flex-col gap-8 sm:gap-10 lg:block lg:h-[clamp(390px,calc(100svh-160px),545px)]">
+          {projects.map((project, index) => (
+            <div key={project.id} className="orbit-premium-card relative w-full lg:absolute lg:inset-0">
+              <div className="mb-3 flex items-center gap-3 px-1 font-mono text-[10px] uppercase tracking-[.18em] text-white/50 lg:hidden">
+                <span style={{ color: palettes[project.theme].accent }}>{project.id} / 03</span>
+                <span className="h-px flex-1 bg-gradient-to-r from-white/30 to-transparent" />
+                <span>{index === 0 ? "INICIO" : index === 1 ? "SIGUIENTE" : "ÚLTIMO PROYECTO"}</span>
+              </div>
+              <ProjectCard project={project} />
+            </div>
+          ))}
         </div>
 
-        {/* Esferas flotantes, distribuidas a diferentes alturas */}
-        <div className="projects-orb hidden md:block absolute left-[8%] top-[7%] h-7 w-7 rounded-full bg-gradient-to-br from-white via-violet-300 to-blue-400 shadow-lg shadow-blue-300/30" />
-        <div className="projects-orb hidden md:block absolute right-[10%] top-[29%] h-9 w-9 rounded-full bg-gradient-to-br from-white via-blue-300 to-violet-400 shadow-lg shadow-violet-300/30" />
-        <div className="projects-orb hidden md:block absolute left-[6%] top-[65%] h-5 w-5 rounded-full bg-gradient-to-br from-white via-violet-200 to-blue-400" />
-        <div className="projects-orb hidden md:block absolute right-[8%] bottom-[9%] h-7 w-7 rounded-full bg-gradient-to-br from-white via-violet-300 to-blue-400 shadow-lg shadow-blue-300/30" />
+
       </div>
-
-      <div className="relative z-10 mx-auto max-w-[1500px]">
-        <div className="v2-heading relative mb-16 sm:mb-24">
-          <div className="v2-heading-label mb-8 flex items-center gap-4">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-violet-500" />
-            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-violet-600 sm:text-xs">
-              01 / Portfolio 
-            </span>
-            <span className="v2-heading-line h-px flex-1 origin-left bg-gradient-to-r from-violet-400/60 to-transparent" />
-          </div>
-
-          {/* Luz iridiscente suave a la izquierda; la forma grande ahora flota a la derecha. */}
-          <div
-            aria-hidden="true"
-            className="projects-orb pointer-events-none absolute -left-[12%] top-[36%] hidden h-[250px] w-[250px] opacity-35 lg:block xl:-left-[6%] xl:h-[310px] xl:w-[310px]"
-          >
-            <div
-              className="h-full w-full rounded-[53%_47%_58%_42%/48%_55%_45%_52%]"
-              style={{
-                background: "radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.9) 0%, rgba(233,213,255,0.82) 22%, rgba(196,181,253,0.72) 43%, rgba(147,197,253,0.68) 66%, rgba(167,139,250,0.52) 84%, rgba(167,139,250,0) 100%)",
-                boxShadow: "inset 20px 24px 55px rgba(255,255,255,0.65), 0 0 95px 35px rgba(167,139,250,0.18)",
-                filter: "blur(16px)",
-                WebkitMaskImage: "radial-gradient(ellipse, black 40%, transparent 78%)",
-                maskImage: "radial-gradient(ellipse, black 40%, transparent 78%)",
-              }}
-            />
-          </div>
-
-          <h2 className="relative z-10 font-heading text-[clamp(3rem,7.5vw,5.5rem)] font-bold leading-[1.02] tracking-[-0.075em]">
-            <span className="block overflow-hidden pb-[0.12em]">
-              <span className="v2-heading-word block text-[#17192D]">Proyectos</span>
-            </span>
-            <span className="block overflow-hidden pb-[0.12em]">
-              <span className="v2-heading-word block bg-gradient-to-r from-[#8B5CF6] to-[#3B82F6] bg-clip-text text-transparent">
-                destacados.
-              </span>
-            </span>
-          </h2>
-
-          <p className="v2-heading-description mt-7 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
-            Una selección de proyectos donde combino desarrollo Front-End, diseño de interfaces
-            y soluciones funcionales, con especial atención a la experiencia de usuario.
-          </p>
-
-          <div className="v2-heading-footer mt-9 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">
-            <span>Explorar proyectos</span>
-            <span aria-hidden="true" className="text-violet-600">↓</span>
-          </div>
-        </div>
-        {projects.map((project, index) => <ProjectRow key={project.id} project={project} index={index}/>)}
+      <div className="mx-auto mt-8 max-w-[1380px] border-t border-white/10 px-5 pt-5 text-center font-mono text-[10px] uppercase tracking-[.2em] text-white/40 sm:px-10 lg:mt-0">
+        DISEÑO · DESARROLLO · EXPERIENCIAS INTERACTIVAS
       </div>
     </section>
   );
