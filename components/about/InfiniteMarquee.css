@@ -14,7 +14,7 @@
   background: transparent;
 }
 
-/* FONDO SUAVE */
+/* FONDO */
 
 .marquee-background {
   display: none;
@@ -28,13 +28,12 @@
   overflow: hidden;
 }
 
-/* MOVIMIENTO INFINITO EN ESCRITORIO */
+/* MOVIMIENTO INFINITO */
 
 .marquee-track {
   display: flex;
   width: max-content;
   animation: marquee-left 38s linear infinite;
-  will-change: transform;
 }
 
 /* GRUPOS DUPLICADOS */
@@ -43,6 +42,8 @@
   display: flex;
   flex: 0 0 auto;
   align-items: center;
+  width: max-content;
+  flex-wrap: nowrap;
 }
 
 /* TECNOLOGÍAS */
@@ -83,26 +84,28 @@
   color: #8b5cf6;
 }
 
-/* ANIMACIÓN ORIGINAL */
+/* ANIMACIÓN CONTINUA */
 
 @keyframes marquee-left {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-/* PAUSA AL PASAR EL MOUSE */
+/* PAUSA CON MOUSE, SOLO EN DISPOSITIVOS HOVER */
 
-.marquee-row:hover .marquee-track {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  .marquee-row:hover .marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 /* =========================================
-   CELULARES: MODO RENDIMIENTO
+   CELULARES: CARRUSEL INFINITO LIVIANO
 ========================================= */
 
 @media (max-width: 767px) {
@@ -111,40 +114,38 @@
   }
 
   .marquee-row {
-    overflow: visible;
+    overflow: hidden;
   }
 
   .marquee-track {
-    width: 100%;
-    animation: none;
-    transform: none;
-    will-change: auto;
+    width: max-content;
+    animation: marquee-left 32s linear infinite;
   }
-
-  /* Mostramos una sola copia de las tecnologías */
 
   .marquee-group {
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px 18px;
+    width: max-content;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0;
   }
 
+  /* Se muestran ambas copias para el loop */
+
   .marquee-group:nth-child(2) {
-    display: none;
+    display: flex;
   }
 
   .marquee-item {
-    gap: 8px;
-    padding-right: 0;
+    gap: 12px;
+    padding-right: 12px;
   }
 
   .marquee-word {
-    font-size: clamp(18px, 4.5vw, 26px);
+    font-size: clamp(22px, 5.5vw, 30px);
   }
 
   .marquee-symbol {
-    font-size: 14px;
+    font-size: 17px;
   }
 
   .marquee-outline {
@@ -160,6 +161,13 @@
   .marquee-track {
     animation: none;
     transform: none;
-    will-change: auto;
+  }
+
+  .marquee-row {
+    overflow-x: auto;
+  }
+
+  .marquee-group:nth-child(2) {
+    display: none;
   }
 }

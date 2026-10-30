@@ -48,6 +48,7 @@ const projects: Project[] = [
     highlights: ["Reservas limitadas a la semana actual y control de disponibilidad", "Panel privado para consultar y gestionar reservas", "Firebase Authentication y sincronización mediante Firestore"],
     technologies: ["React", "Vite", "Tailwind CSS", "Firebase Auth", "Firestore"],
     video: "/video/reservas.mp4",
+    poster: "/images/Restaurante.webp",
     theme: "blue",
     demo: "https://ianpallero03.github.io/sistema-reservas-restaurante/",
     github: "https://github.com/IanPallero03/sistema-reservas-restaurante"
@@ -60,6 +61,7 @@ const projects: Project[] = [
     highlights: ["Búsqueda dinámica de películas", "Filtros por categorías y géneros", "Componentes reutilizables e integración con API externa"],
     technologies: ["React", "Vite", "JavaScript", "Tailwind CSS", "TMDB API"],
     video: "/video/trailerbox.mp4",
+    poster: "/images/trailer-box_11zon.webp",
     theme: "dark",
     demo: "https://ianpallero03.github.io/TrailerBox/",
     github: "https://github.com/IanPallero03/TrailerBox"
