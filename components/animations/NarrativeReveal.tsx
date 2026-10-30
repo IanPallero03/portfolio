@@ -22,8 +22,8 @@ export default function NarrativeReveal() {
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
-      // Desktop conserva sus animaciones originales.
-      // Respetamos la preferencia de movimiento reducido.
+      // Conservamos el comportamiento original de desktop.
+      // Solo agregamos entradas GSAP en mobile.
       if (!isMobile || reducedMotion) return;
 
       const section = sectionRef.current;
@@ -45,8 +45,8 @@ export default function NarrativeReveal() {
         ".narrative-marquee"
       );
 
-      // Animaciones de entrada, sin efectos
-      // continuos ni parallax en celulares.
+      // Animaciones de entrada, sin parallax
+      // ni animaciones decorativas continuas.
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -72,7 +72,7 @@ export default function NarrativeReveal() {
       }
 
       // Diseño, Código y Creatividad
-      // aparecen escalonadamente desde abajo.
+      // se revelan desde abajo.
       if (words.length) {
         timeline.fromTo(
           words,
@@ -141,7 +141,134 @@ export default function NarrativeReveal() {
         md:h-full
       "
     >
-      {/* LUCES AMBIENTALES - SOLO DESKTOP */}
+      {/* ==================================
+          MOBILE: FONDO DECORATIVO ESTÁTICO
+         ================================== */}
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none absolute inset-0
+          overflow-hidden md:hidden
+        "
+      >
+        {/* Degradado suave */}
+        <div
+          className="
+            absolute inset-0
+            bg-gradient-to-b
+            from-[#F8FAFF]
+            via-[#F0F3FF]
+            to-[#F6F1FF]
+          "
+        />
+
+        {/* Reflejos suaves sin blur pesado */}
+        <div
+          className="
+            absolute -left-24 top-[15%]
+            h-64 w-64 rounded-full
+            bg-blue-200/20
+          "
+          style={{
+            background:
+              "radial-gradient(circle, rgba(147,197,253,0.22) 0%, transparent 70%)",
+          }}
+        />
+
+        <div
+          className="
+            absolute -right-24 bottom-[10%]
+            h-72 w-72 rounded-full
+          "
+          style={{
+            background:
+              "radial-gradient(circle, rgba(196,181,253,0.24) 0%, transparent 70%)",
+          }}
+        />
+
+        {/* Ondas violetas y azules estáticas */}
+        <svg
+          className="
+            absolute inset-0
+            h-full w-full opacity-80
+          "
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient
+              id="narrative-mobile-wave"
+              x1="0"
+              y1="0"
+              x2="1440"
+              y2="0"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop
+                offset="0%"
+                stopColor="#93C5FD"
+                stopOpacity="0.08"
+              />
+
+              <stop
+                offset="45%"
+                stopColor="#A78BFA"
+                stopOpacity="0.48"
+              />
+
+              <stop
+                offset="75%"
+                stopColor="#60A5FA"
+                stopOpacity="0.30"
+              />
+
+              <stop
+                offset="100%"
+                stopColor="#C4B5FD"
+                stopOpacity="0.08"
+              />
+            </linearGradient>
+          </defs>
+
+          <path
+            d="
+              M-100 320
+              C 250 110, 410 580, 760 340
+              S 1260 150, 1550 390
+            "
+            stroke="url(#narrative-mobile-wave)"
+            strokeWidth="2.5"
+          />
+
+          <path
+            d="
+              M-100 490
+              C 280 220, 490 720, 850 470
+              S 1290 280, 1560 520
+            "
+            stroke="url(#narrative-mobile-wave)"
+            strokeWidth="2"
+            opacity="0.65"
+          />
+
+          <path
+            d="
+              M-100 730
+              C 280 530, 530 930, 920 690
+              S 1290 530, 1550 760
+            "
+            stroke="url(#narrative-mobile-wave)"
+            strokeWidth="1.5"
+            opacity="0.40"
+          />
+        </svg>
+      </div>
+
+      {/* ==================================
+          DESKTOP: LUCES ORIGINALES
+         ================================== */}
       <div
         aria-hidden="true"
         className="
@@ -164,7 +291,7 @@ export default function NarrativeReveal() {
         "
       />
 
-      {/* ONDAS DECORATIVAS - SOLO DESKTOP */}
+      {/* ONDAS ORIGINALES DE DESKTOP */}
       <svg
         className="
           pointer-events-none absolute inset-0
@@ -190,7 +317,9 @@ export default function NarrativeReveal() {
         />
       </svg>
 
-      {/* COMPOSICIÓN NARRATIVA */}
+      {/* ==================================
+          CONTENIDO PRINCIPAL
+         ================================== */}
       <div
         className="
           relative z-10
