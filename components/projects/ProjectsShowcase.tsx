@@ -402,6 +402,43 @@ export default function ProjectsShowcaseV2() {
       >
         <div className="absolute inset-0 bg-[linear-gradient(165deg,#F7F5FF_0%,#F1F5FF_30%,#F9F8FF_55%,#EEF5FF_78%,#F8F5FF_100%)]" />
 
+        {/* MOBILE: acentos y ondas estaticas, sin GSAP ni filtros pesados. */}
+        <div className="absolute inset-0 md:hidden">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse at 0% 18%, rgba(147,197,253,0.19), transparent 48%), radial-gradient(ellipse at 100% 68%, rgba(196,181,253,0.22), transparent 52%)",
+            }}
+          />
+          <svg
+            className="absolute inset-0 h-full w-full opacity-70"
+            viewBox="0 0 390 1400"
+            preserveAspectRatio="none"
+            fill="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="projectsWaveMobile" x1="0" y1="0" x2="390" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stopColor="#93C5FD" stopOpacity="0.10" />
+                <stop offset="0.5" stopColor="#A78BFA" stopOpacity="0.43" />
+                <stop offset="1" stopColor="#60A5FA" stopOpacity="0.10" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M-110 180 C 60 75, 190 325, 500 145 M-130 610 C 100 455, 230 750, 510 540 M-90 1110 C 90 960, 260 1270, 510 1060"
+              stroke="url(#projectsWaveMobile)"
+              strokeWidth="1.8"
+            />
+            <path
+              d="M-100 270 C 75 135, 215 420, 520 260 M-100 700 C 70 555, 245 860, 510 675 M-100 1200 C 90 1030, 270 1370, 500 1160"
+              stroke="url(#projectsWaveMobile)"
+              strokeWidth="1.2"
+              opacity="0.55"
+            />
+          </svg>
+        </div>
+
         {/* Luces ambientales similares a las del Hero */}
         <div className="hidden md:block absolute -left-40 top-[15%] h-[450px] w-[450px] rounded-full bg-blue-200/35 blur-[45px] md:blur-[110px]" />
         <div className="hidden md:block absolute -right-40 top-[42%] h-[500px] w-[500px] rounded-full bg-violet-200/40 blur-[50px] md:blur-[120px]" />
