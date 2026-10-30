@@ -40,9 +40,8 @@ export default function ExperienceJourney() {
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
-      // En celulares, el contenido permanece visible y sin animaciones GSAP.
-      // En escritorio se conservan todas las animaciones originales.
-      if (reducedMotion || isMobile) return;
+      // Entradas GSAP en escritorio y celular; respetar movimiento reducido.
+      if (reducedMotion) return;
 
       gsap.fromTo(
         ".experience-heading",
@@ -58,7 +57,7 @@ export default function ExperienceJourney() {
       gsap.fromTo(
         ".experience-title-slide",
         {
-          x: -140,
+          x: isMobile ? -45 : -140,
           autoAlpha: 0,
         },
         {
@@ -113,17 +112,20 @@ export default function ExperienceJourney() {
           scrollTrigger: { trigger: ".experience-card", start: "top 88%", once: true },
         },
       );
-      gsap.to(".experience-wave-one", { x: 30, y: -10, duration: 12, repeat: -1, yoyo: true, ease: "sine.inOut" });
-      gsap.to(".experience-wave-two", { x: -24, y: 12, duration: 15, repeat: -1, yoyo: true, ease: "sine.inOut" });
-      gsap.to(".experience-shape", {
-        x: 18,
-        y: -16,
-        rotation: 6,
-        duration: 11,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
+      // Movimientos continuos del fondo: exclusivamente escritorio.
+      if (!isMobile) {
+        gsap.to(".experience-wave-one", { x: 30, y: -10, duration: 12, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        gsap.to(".experience-wave-two", { x: -24, y: 12, duration: 15, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        gsap.to(".experience-shape", {
+          x: 18,
+          y: -16,
+          rotation: 6,
+          duration: 11,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
     },
     { scope: sectionRef },
   );
@@ -137,9 +139,9 @@ export default function ExperienceJourney() {
     >
       {/* Fondo suave para mantener continuidad visual con el Hero. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-44 top-10 h-96 w-96 rounded-full bg-blue-200/35 blur-[40px] md:blur-[105px]" />
-        <div className="absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-200/40 blur-[45px] md:blur-[115px]" />
-        <svg className="absolute inset-0 h-full w-full opacity-75" viewBox="0 0 1440 800" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className="hidden md:block absolute -left-44 top-10 h-96 w-96 rounded-full bg-blue-200/35 blur-[40px] md:blur-[105px]" />
+        <div className="hidden md:block absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-200/40 blur-[45px] md:blur-[115px]" />
+        <svg className="hidden md:block absolute inset-0 h-full w-full opacity-75" viewBox="0 0 1440 800" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="experience-wave-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
               <stop stopColor="#93C5FD" stopOpacity="0.05" />
@@ -151,7 +153,7 @@ export default function ExperienceJourney() {
           <path className="experience-wave-two" d="M-110 570 C 240 300, 430 760, 760 510 S 1190 280, 1540 570" stroke="url(#experience-wave-gradient)" strokeWidth="1.5" opacity="0.45" />
         </svg>
         <div
-          className="experience-shape absolute -left-52 bottom-[-12rem] h-[420px] w-[420px] opacity-45 sm:h-[560px] sm:w-[560px]"
+          className="experience-shape hidden md:block absolute -left-52 bottom-[-12rem] h-[420px] w-[420px] opacity-45 sm:h-[560px] sm:w-[560px]"
           style={{
             borderRadius: "53% 47% 59% 41% / 50% 57% 43% 50%",
             background: "radial-gradient(ellipse at 65% 25%, #fff 0%, #e9d5ff 17%, #c4b5fd 39%, #93c5fd 68%, #a78bfa 90%)",
@@ -159,7 +161,7 @@ export default function ExperienceJourney() {
           }}
         />
         <div
-          className="experience-shape absolute -right-36 top-[12%] h-72 w-72 opacity-35 sm:h-80 sm:w-80"
+          className="experience-shape hidden md:block absolute -right-36 top-[12%] h-72 w-72 opacity-35 sm:h-80 sm:w-80"
           style={{
             borderRadius: "58% 42% 35% 65% / 42% 58% 42% 58%",
             background:
@@ -252,4 +254,3 @@ export default function ExperienceJourney() {
     </section>
   );
 }
-
