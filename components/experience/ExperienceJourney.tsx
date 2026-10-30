@@ -137,38 +137,84 @@ export default function ExperienceJourney() {
       aria-labelledby="experience-title"
       className="relative isolate overflow-hidden bg-gradient-to-b from-[#F7F8FF] via-[#F1F4FF] to-[#F5F2FF] px-5 pt-10 pb-20 sm:px-8 sm:pt-12 sm:pb-24 lg:pt-5 lg:pb-28"
     >
-      {/* Fondo suave para mantener continuidad visual con el Hero. */}
+      {/* FONDO: ondas estáticas en móvil; efectos originales en escritorio. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="hidden md:block absolute -left-44 top-10 h-96 w-96 rounded-full bg-blue-200/35 blur-[40px] md:blur-[105px]" />
-        <div className="hidden md:block absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-200/40 blur-[45px] md:blur-[115px]" />
-        <svg className="hidden md:block absolute inset-0 h-full w-full opacity-75" viewBox="0 0 1440 800" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="experience-wave-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
-              <stop stopColor="#93C5FD" stopOpacity="0.05" />
-              <stop offset="0.5" stopColor="#A78BFA" stopOpacity="0.48" />
-              <stop offset="1" stopColor="#60A5FA" stopOpacity="0.12" />
-            </linearGradient>
-          </defs>
-          <path className="experience-wave-one" d="M-120 475 C 210 190, 350 710, 710 420 S 1110 160, 1570 430" stroke="url(#experience-wave-gradient)" strokeWidth="2" />
-          <path className="experience-wave-two" d="M-110 570 C 240 300, 430 760, 760 510 S 1190 280, 1540 570" stroke="url(#experience-wave-gradient)" strokeWidth="1.5" opacity="0.45" />
-        </svg>
-        <div
-          className="experience-shape hidden md:block absolute -left-52 bottom-[-12rem] h-[420px] w-[420px] opacity-45 sm:h-[560px] sm:w-[560px]"
-          style={{
-            borderRadius: "53% 47% 59% 41% / 50% 57% 43% 50%",
-            background: "radial-gradient(ellipse at 65% 25%, #fff 0%, #e9d5ff 17%, #c4b5fd 39%, #93c5fd 68%, #a78bfa 90%)",
-            boxShadow: "inset 25px 25px 50px rgba(255,255,255,.75)",
-          }}
-        />
-        <div
-          className="experience-shape hidden md:block absolute -right-36 top-[12%] h-72 w-72 opacity-35 sm:h-80 sm:w-80"
-          style={{
-            borderRadius: "58% 42% 35% 65% / 42% 58% 42% 58%",
-            background:
-              "radial-gradient(ellipse at 30% 25%, #fff 0%, #e9d5ff 16%, #c4b5fd 39%, #93c5fd 65%, #a78bfa 84%, #dbeafe 100%)",
-            boxShadow: "inset 25px 25px 50px rgba(255,255,255,.8)",
-          }}
-        />
+        {/* MOBILE: luces suaves y ondas decorativas sin movimiento. */}
+        <div className="absolute inset-0 md:hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F7F8FF] via-[#F3F5FF] to-[#F5F2FF]" />
+          <div className="absolute -left-24 top-12 h-56 w-56 rounded-full bg-blue-200/30 blur-[70px]" />
+          <div className="absolute -right-20 bottom-10 h-60 w-60 rounded-full bg-violet-200/30 blur-[75px]" />
+
+          <svg
+            className="absolute inset-0 h-full w-full opacity-70"
+            viewBox="0 0 1440 800"
+            preserveAspectRatio="none"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="experience-wave-mobile-gradient"
+                x1="0" y1="0" x2="1440" y2="0"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#93C5FD" stopOpacity="0.08" />
+                <stop offset="0.5" stopColor="#A78BFA" stopOpacity="0.38" />
+                <stop offset="1" stopColor="#60A5FA" stopOpacity="0.08" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M-120 430 C 210 180, 360 650, 710 390 S 1110 170, 1570 420"
+              stroke="url(#experience-wave-mobile-gradient)"
+              strokeWidth="2"
+            />
+            <path
+              d="M-100 555 C 260 330, 430 730, 780 500 S 1180 300, 1540 550"
+              stroke="url(#experience-wave-mobile-gradient)"
+              strokeWidth="1.5"
+              opacity="0.55"
+            />
+          </svg>
+        </div>
+
+        {/* DESKTOP: se conserva el fondo original y sus animaciones GSAP. */}
+        <div className="hidden md:block">
+          <div className="absolute -left-44 top-10 h-96 w-96 rounded-full bg-blue-200/35 blur-[105px]" />
+          <div className="absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-200/40 blur-[115px]" />
+          <svg
+            className="absolute inset-0 h-full w-full opacity-75"
+            viewBox="0 0 1440 800"
+            preserveAspectRatio="none"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="experience-wave-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#93C5FD" stopOpacity="0.05" />
+                <stop offset="0.5" stopColor="#A78BFA" stopOpacity="0.48" />
+                <stop offset="1" stopColor="#60A5FA" stopOpacity="0.12" />
+              </linearGradient>
+            </defs>
+            <path className="experience-wave-one" d="M-120 475 C 210 190, 350 710, 710 420 S 1110 160, 1570 430" stroke="url(#experience-wave-gradient)" strokeWidth="2" />
+            <path className="experience-wave-two" d="M-110 570 C 240 300, 430 760, 760 510 S 1190 280, 1540 570" stroke="url(#experience-wave-gradient)" strokeWidth="1.5" opacity="0.45" />
+          </svg>
+          <div
+            className="experience-shape absolute -left-52 bottom-[-12rem] h-[420px] w-[420px] opacity-45 sm:h-[560px] sm:w-[560px]"
+            style={{
+              borderRadius: "53% 47% 59% 41% / 50% 57% 43% 50%",
+              background: "radial-gradient(ellipse at 65% 25%, #fff 0%, #e9d5ff 17%, #c4b5fd 39%, #93c5fd 68%, #a78bfa 90%)",
+              boxShadow: "inset 25px 25px 50px rgba(255,255,255,.75)",
+            }}
+          />
+          <div
+            className="experience-shape absolute -right-36 top-[12%] h-72 w-72 opacity-35 sm:h-80 sm:w-80"
+            style={{
+              borderRadius: "58% 42% 35% 65% / 42% 58% 42% 58%",
+              background: "radial-gradient(ellipse at 30% 25%, #fff 0%, #e9d5ff 16%, #c4b5fd 39%, #93c5fd 65%, #a78bfa 84%, #dbeafe 100%)",
+              boxShadow: "inset 25px 25px 50px rgba(255,255,255,.8)",
+            }}
+          />
+        </div>
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1400px]">
