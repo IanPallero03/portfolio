@@ -29,28 +29,8 @@ const asset = (path: string) => `${basePath}${path}`;
 const projects: Project[] = [
   {
     id: "01",
-    title: "SignagePro",
-    eyebrow: "BUILD / 001",
-    signature: "IDENTIDAD. INTERFACES. EVOLUCIÓN.",
-    category: "SAAS · DIGITAL SIGNAGE · FRONT-END",
-    description:
-      "Plataforma SaaS para administrar contenido en pantallas de forma remota. Durante cinco meses formé parte de un equipo de desarrolladores, colaborando en la evolución del producto y su experiencia de usuario.",
-    highlights: [
-      "Adaptación responsive de la landing para distintas pantallas",
-      "Diseño del nombre, logotipo y paleta de colores del producto",
-      "Desarrollo de componentes y mejoras visuales del dashboard",
-    ],
-    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "CSS Modules", "GSAP"],
-    video: "/video/signagepro.mp4",
-    poster: "/images/signagepro-cover.png",
-    theme: "violet",
-    demo: "https://signagepro.vercel.app/",
-    github: "https://github.com/saass-Tv/SaaS-Tv-Front",
-  },
-  {
-    id: "02",
     title: "Sistema de Reservas",
-    eyebrow: "BUILD / 002",
+    eyebrow: "BUILD / 001",
     signature: "ORGANIZACIÓN. CONTROL. CONFIANZA.",
     category: "WEB APP · GESTIÓN DE RESERVAS",
     description:
@@ -68,9 +48,9 @@ const projects: Project[] = [
     github: "https://github.com/IanPallero03/sistema-reservas-restaurante",
   },
   {
-    id: "03",
+    id: "02",
     title: "TrailerBox",
-    eyebrow: "BUILD / 003",
+    eyebrow: "BUILD / 002",
     signature: "DESCUBRIR. EXPLORAR. REPRODUCIR.",
     category: "ENTRETENIMIENTO · EXPERIENCIA WEB",
     description:
@@ -86,6 +66,26 @@ const projects: Project[] = [
     theme: "dark",
     demo: "https://ianpallero03.github.io/TrailerBox/",
     github: "https://github.com/IanPallero03/TrailerBox",
+  },
+  {
+    id: "03",
+    title: "SignagePro",
+    eyebrow: "BUILD / 003",
+    signature: "IDENTIDAD. INTERFACES. EVOLUCIÓN.",
+    category: "SAAS · DIGITAL SIGNAGE · FRONT-END",
+    description:
+      "Plataforma SaaS para administrar contenido en pantallas de forma remota. Durante cinco meses formé parte de un equipo de desarrolladores, colaborando en la evolución del producto y su experiencia de usuario.",
+    highlights: [
+      "Adaptación responsive de la landing para distintas pantallas",
+      "Diseño del nombre, logotipo y paleta de colores del producto",
+      "Desarrollo de componentes y mejoras visuales del dashboard",
+    ],
+    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "CSS Modules", "GSAP"],
+    video: "/video/signagepro.mp4",
+    poster: "/images/signagepro-cover.png",
+    theme: "violet",
+    demo: "https://signagepro.vercel.app/",
+    github: "https://github.com/saass-Tv/SaaS-Tv-Front",
   },
 ];
 
@@ -382,13 +382,17 @@ export default function ProjectsShowcaseV2() {
   return (
     <section id="proyectos" ref={sectionRef} className="relative bg-[#080B18] pb-20 pt-14 text-white lg:pt-20">
       <header className="relative z-10 mx-auto max-w-[1380px] px-5 pb-8 sm:px-10 lg:pb-0">
-        <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[.24em] text-violet-300">
-          <span>IP® — CREATIVE PORTFOLIO</span><span className="text-white/45">SELECTED WORK / 2026</span>
+      <div className="contact-reveal mb-12 flex items-center gap-4 sm:mb-16">
+          <span className="h-2 w-2 shrink-0 rounded-full bg-violet-400" />
+          <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-300 sm:text-[11px]">
+            03 / PROYECTOS
+          </span>
+          <span className="h-px min-w-0 flex-1 bg-gradient-to-r from-violet-400/75 via-blue-300/30 to-transparent" />
         </div>
         <div className="mt-5 flex flex-wrap items-end justify-between gap-4 lg:gap-10">
           <div>
             <h2 className="font-heading text-[clamp(3rem,6.2vw,6.5rem)] font-bold leading-[.95] tracking-[-.075em]">
-              Proyectos <span className="bg-gradient-to-r from-[#D5B8FF] via-[#B9B4FF] to-[#7EC9FF] bg-clip-text text-transparent">destacados.</span>
+              Proyectos
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/60 sm:text-base">
               Una selección de proyectos donde combino desarrollo Front-End, diseño de interfaces y soluciones funcionales. Deslizá para explorar cada experiencia.

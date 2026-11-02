@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useRef } from "react";
@@ -42,7 +41,7 @@ export default function HeroIntro() {
       }
 
       // Animaciones originales de escritorio.
-      // Los botones NO están incluidos.
+      // Los botones y el footer NO están incluidos.
       const timeline = gsap.timeline({
         defaults: {
           ease: "power3.out",
@@ -118,7 +117,6 @@ export default function HeroIntro() {
         {/* CONTENIDO PRINCIPAL */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-10 lg:px-12">
           <div className="grid items-center gap-4 sm:gap-12 md:grid-cols-[0.65fr_1.35fr] lg:gap-16">
-
             {/* FOTOGRAFÍA: MÁS PEQUEÑA EN CELULARES */}
             <div className="hero-photo relative mx-auto w-full max-w-[145px] sm:max-w-[240px] md:max-w-[310px] lg:max-w-[320px]">
               <div className="absolute -inset-3 rounded-[28px] border border-primary/15" />
@@ -142,11 +140,9 @@ export default function HeroIntro() {
 
             {/* INFORMACIÓN PROFESIONAL */}
             <div className="min-w-0">
-
               {/* ETIQUETA */}
               <div className="hero-label mb-3 flex flex-wrap items-center gap-3 sm:mb-6">
                 <span className="h-2 w-2 rounded-full bg-primary" />
-
                 <span className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary sm:text-sm">
                   Front-End Developer
                 </span>
@@ -193,8 +189,6 @@ export default function HeroIntro() {
 
               {/* BOTONES: SIEMPRE EN EL HERO Y SIN ANIMACIONES */}
               <div className="hero-actions relative z-20 mt-4 grid grid-cols-2 gap-2 sm:mt-9 sm:flex sm:flex-wrap sm:items-center sm:gap-4">
-
-                {/* VER PROYECTOS */}
                 <a
                   href="#proyectos"
                   className="
@@ -211,7 +205,6 @@ export default function HeroIntro() {
                   Ver proyectos ↗
                 </a>
 
-                {/* DESCARGAR CV */}
                 <a
                   href={`${basePath}/CV_Ian_Pallero.pdf`}
                   download="CV-Ian-Pallero.pdf"
@@ -228,20 +221,17 @@ export default function HeroIntro() {
                 >
                   Descargar CV ↓
                 </a>
-
               </div>
             </div>
           </div>
 
-          
-{/* DETALLES INFERIORES: VISIBLES DESDE EL INICIO */}
-<div className="hero-footer mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-5 sm:mt-14">
-
+          {/* DETALLES INFERIORES: el indicador de scroll solo aparece en tablet/desktop. */}
+          <div className="hero-footer mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-5 sm:mt-14">
             <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 sm:text-xs">
               Argentina · Desarrollo web
             </span>
 
-            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 sm:text-xs">
+            <span className="hidden font-mono text-[10px] uppercase tracking-widest text-slate-500 md:inline sm:text-xs">
               Scroll para explorar ↓
             </span>
           </div>

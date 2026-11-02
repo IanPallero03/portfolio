@@ -113,7 +113,7 @@ export default function ContactSection() {
         <div className="contact-reveal mb-12 flex items-center gap-4 sm:mb-16">
           <span className="h-2 w-2 shrink-0 rounded-full bg-violet-400" />
           <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-300 sm:text-[11px]">
-            03 / Contacto
+            05 / Contacto
           </span>
           <span className="h-px min-w-0 flex-1 bg-gradient-to-r from-violet-400/75 via-blue-300/30 to-transparent" />
         </div>
@@ -122,15 +122,18 @@ export default function ContactSection() {
           <p className="contact-reveal mb-6 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-violet-300">
             Disponible para conectar
           </p>
-          <h2
-            id="contact-title"
-            className="contact-title-slide max-w-[1350px] font-heading text-[clamp(4rem,11vw,11.75rem)] font-bold leading-[0.9] tracking-[-0.085em] text-white"
-          >
-            ¿Creamos algo
-            <span className="block bg-gradient-to-r from-violet-300 via-violet-400 to-sky-300 bg-clip-text pb-[0.12em] text-transparent">
-              juntos?
-            </span>
-          </h2>
+          
+<h2
+  id="contact-title"
+  className="contact-title-slide max-w-[1350px] font-heading text-[clamp(3.2rem,9vw,10rem)] font-bold leading-[0.95] tracking-[-0.075em] text-white"
+>
+  ¿Qué idea llevamos
+  <span className="block bg-gradient-to-r from-violet-300 via-violet-400 to-sky-300 bg-clip-text pb-[0.12em] text-transparent">
+    a la pantalla?
+  </span>
+</h2>
+
+          
 
           <div className="contact-reveal mt-8 flex flex-col gap-7 sm:mt-12 lg:mt-14 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
             <p className="max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">

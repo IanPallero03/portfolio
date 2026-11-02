@@ -327,7 +327,7 @@ export default function NarrativeReveal() {
           items-center justify-center
           py-10
           sm:py-12
-          md:h-full md:py-16
+          md:h-full md:py-8 lg:py-10
         "
       >
         {/* TEXTO */}
@@ -349,6 +349,7 @@ export default function NarrativeReveal() {
             className="
               font-heading
               text-[clamp(3rem,8vw,8rem)]
+              md:text-[clamp(3rem,min(8vw,10svh),8rem)]
               font-bold
               leading-[1.05]
               tracking-[-0.07em]
@@ -388,6 +389,7 @@ export default function NarrativeReveal() {
               text-base leading-relaxed
               text-slate-600
               sm:mt-8 sm:text-lg
+             md:mt-5
             "
           >
             Tres elementos que combino para transformar ideas en
@@ -403,6 +405,7 @@ export default function NarrativeReveal() {
             w-[calc(100%+3rem)]
             shrink-0
             sm:mt-6
+            md:mt-4
           "
         >
           <InfiniteMarquee />

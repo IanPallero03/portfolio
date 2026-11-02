@@ -1,13 +1,14 @@
 
+
 import type { NextConfig } from "next";
 
 const isProduction = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
-  // Generar una versión estática para GitHub Pages
+  // Generar versión estática para GitHub Pages
   output: "export",
 
-  // Necesario para exportar imágenes sin optimización del servidor
+  // Imágenes compatibles con exportación estática
   images: {
     unoptimized: true,
   },
@@ -15,11 +16,17 @@ const nextConfig: NextConfig = {
   // Ruta del repositorio en GitHub Pages
   basePath: isProduction ? "/portfolio" : "",
 
-  // Mantener las rutas compatibles con hosting estático
+  // Rutas compatibles con hosting estático
   trailingSlash: true,
+
+  // Ocultar indicador flotante de Next.js
+  devIndicators: false,
 
   // Configuración de Turbopack
   turbopack: {
+    // Utilizar la carpeta portfolio-2.0 como raíz
+    root: __dirname,
+
     rules: {
       "*.css": {
         loaders: ["@tailwindcss/turbopack"],

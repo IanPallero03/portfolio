@@ -7,6 +7,8 @@ import HeroIntro from "@/components/hero/HeroIntro";
 import ContactSection from "@/components/contact/ContactSection";
 import ProjectsShowcase from "@/components/projects/ProjectsShowcase";
 import ExperienceJourney from "@/components/experience/ExperienceJourney";
+import FeaturedSignagePro from "@/components/featured/FeaturedSignagePro";
+import ProjectsInterlude from "@/components/interlude/ProjectsInterlude";
 
 export default function Home() {
   return (
@@ -27,6 +29,10 @@ export default function Home() {
           content={<HeroIntro />}
           scene={<NarrativeReveal />}
         />
+
+        <FeaturedSignagePro />
+        
+        <ProjectsInterlude />
 
         {/* PROYECTOS SELECCIONADOS */}
         <ProjectsShowcase />

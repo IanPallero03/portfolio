@@ -65,3 +65,15 @@ h6 {
   color: #101426;
 }
 
+
+/* Navegación por anclas: espacio para el navbar fijo */
+
+html {
+  scroll-padding-top: 96px;
+}
+
+@media (max-width: 767px) {
+  html {
+    scroll-padding-top: 88px;
+  }
+}

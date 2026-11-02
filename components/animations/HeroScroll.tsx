@@ -28,24 +28,36 @@ export default function HeroScroll({
       const mm = gsap.matchMedia();
 
       // ==========================================
-      // ESCRITORIO: ANIMACIONES ORIGINALES
+      // DESKTOP: TRANSICIÓN CINEMATOGRÁFICA
       // ==========================================
       mm.add(
         "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
         () => {
-          gsap.set(contentRef.current, {
+          const contentElement = contentRef.current;
+          const sceneElement = sceneRef.current;
+          const containerElement = containerRef.current;
+
+          if (
+            !contentElement ||
+            !sceneElement ||
+            !containerElement
+          ) {
+            return;
+          }
+
+          gsap.set(contentElement, {
             autoAlpha: 1,
             y: 0,
           });
 
-          gsap.set(sceneRef.current, {
+          gsap.set(sceneElement, {
             autoAlpha: 0,
             y: 100,
           });
 
           const timeline = gsap.timeline({
             scrollTrigger: {
-              trigger: containerRef.current,
+              trigger: containerElement,
               start: "top top",
               end: "+=1050",
               scrub: 1.2,
@@ -57,7 +69,7 @@ export default function HeroScroll({
 
           // Desaparece el Hero.
           timeline.to(
-            contentRef.current,
+            contentElement,
             {
               autoAlpha: 0,
               y: -100,
@@ -67,9 +79,9 @@ export default function HeroScroll({
             0
           );
 
-          // Aparece la sección narrativa.
+          // Aparece NarrativeReveal.
           timeline.to(
-            sceneRef.current,
+            sceneElement,
             {
               autoAlpha: 1,
               y: 0,
@@ -79,7 +91,7 @@ export default function HeroScroll({
             0.25
           );
 
-          // Animación de Diseño, Código y Creatividad.
+          // Revelamos las tres palabras.
           timeline.from(
             ".narrative-word",
             {
@@ -92,7 +104,7 @@ export default function HeroScroll({
             0.35
           );
 
-          // Animación de la descripción.
+          // Aparece la descripción.
           timeline.from(
             ".narrative-description",
             {
@@ -103,85 +115,66 @@ export default function HeroScroll({
             },
             0.65
           );
+
+          return () => timeline.kill();
         }
       );
 
       // ==========================================
-      // CELULARES: MODO RENDIMIENTO
-      // ==========================================
-      mm.add("(max-width: 767px)", () => {
-        gsap.set(contentRef.current, {
-          autoAlpha: 1,
-          x: 0,
-          y: 0,
-          clearProps: "transform",
-        });
-
-        gsap.set(sceneRef.current, {
-          autoAlpha: 1,
-          x: 0,
-          y: 0,
-          clearProps: "transform",
-        });
-      });
-
-      // ==========================================
-      // ACCESIBILIDAD EN ESCRITORIO
+      // DESKTOP: MOVIMIENTO REDUCIDO
       // ==========================================
       mm.add(
         "(min-width: 768px) and (prefers-reduced-motion: reduce)",
         () => {
           gsap.set(contentRef.current, {
             autoAlpha: 1,
-            x: 0,
-            y: 0,
             clearProps: "transform",
           });
 
           gsap.set(sceneRef.current, {
             autoAlpha: 1,
-            x: 0,
-            y: 0,
             clearProps: "transform",
           });
         }
       );
 
+      // MOBILE:
+      // Sin pin, scrub ni transformaciones GSAP.
+      // El Hero y NarrativeReveal permanecen
+      // en el flujo normal del documento.
+
       return () => mm.revert();
     },
-    {
-      scope: containerRef,
-    }
+    { scope: containerRef }
   );
 
   return (
     <div
       ref={containerRef}
       className="
-        relative
-        w-full
+        relative w-full
         md:h-screen
         md:supports-[height:100dvh]:h-dvh
       "
     >
-      {/* HERO ORIGINAL */}
+      {/* HERO */}
       <div
         ref={contentRef}
         className="
           relative
-          h-screen
-          supports-[height:100dvh]:h-dvh
+          h-[100svh]
           w-full
           overflow-hidden
           md:absolute
           md:inset-0
           md:z-20
+          md:h-full
         "
       >
         {content}
       </div>
 
-      {/* TRANSICIÓN NARRATIVA */}
+      {/* NARRATIVE REVEAL */}
       <div
         ref={sceneRef}
         className="

@@ -222,7 +222,7 @@ export default function ExperienceJourney() {
         <div className="experience-heading mb-10 flex w-full items-center gap-4 sm:mb-12 lg:mb-14">
           <span className="h-2 w-2 shrink-0 rounded-full bg-violet-500" />
           <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-700 sm:text-[11px]">
-            02 / Experiencia y formación
+            04 / Experiencia y formación
           </span>
           <span aria-hidden="true" className="h-px min-w-0 flex-1 bg-gradient-to-r from-violet-400/65 via-violet-300/35 to-transparent" />
         </div>
@@ -244,16 +244,16 @@ export default function ExperienceJourney() {
   y desarrollo independiente para construir soluciones web
   funcionales y bien diseñadas.
 </p>
-<div className="experience-language mt-6 inline-flex items-center gap-3 rounded-full border border-violet-200/80 bg-white/65 px-4 py-2.5">
+<div className="experience-language mt-6 inline-flex items-center gap-3 rounded-full border border-violet-200/80 bg-white/90 px-4 py-2.5">
   <span className="h-2 w-2 rounded-full bg-violet-500" />
-  <span className="font-mono text-xs font-medium text-slate-600">
+  <span className="font-mono text-xs font-medium text-slate-700">
     Inglés · Nivel intermedio
   </span>
 </div>          
         </div>
 
         {/* Derecha: tarjeta compacta, tres menciones claras. */}
-        <article className="experience-card relative min-w-0 overflow-hidden rounded-[26px] border border-white/90 bg-white/85 p-6 shadow-[0_24px_75px_rgba(75,55,140,0.09)] md:backdrop-blur-xl sm:p-8 lg:p-9">
+        <article className="experience-card relative min-w-0 overflow-hidden rounded-[26px] border border-violet-100 bg-white/95 p-6 shadow-[0_24px_75px_rgba(75,55,140,0.09)] md:backdrop-blur-xl sm:p-8 lg:p-9">
           <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-28 h-64 w-64 rounded-full bg-violet-100/65 blur-xl md:blur-3xl" />
           <div className="relative">
             {entries.map((item, index) => (
@@ -273,19 +273,19 @@ export default function ExperienceJourney() {
                   {item.number}
                 </span>
                 <div className="min-w-0">
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-violet-700">
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-violet-800">
                     {item.label}
                   </p>
                   <h3 className="mt-1.5 text-base font-bold leading-snug tracking-tight text-[#17192D] sm:text-lg">
                     {item.title}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-6 text-slate-600">{item.detail}</p>
+                  <p className="mt-1.5 text-sm leading-6 text-slate-700">{item.detail}</p>
                   {item.number === "02" && (
                     <a
                       href="https://signagepro.vercel.app/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 inline-flex text-sm font-semibold text-violet-700 underline-offset-4 transition hover:underline focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600"
+                      className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-violet-800 underline-offset-4 transition hover:text-violet-600 hover:underline focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600"
                     >
                       Conocer SignagePro ↗
                     </a>
