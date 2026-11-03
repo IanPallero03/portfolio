@@ -27,9 +27,7 @@ export default function HeroScroll({
     () => {
       const mm = gsap.matchMedia();
 
-      // ==========================================
-      // DESKTOP: TRANSICIÓN CINEMATOGRÁFICA
-      // ==========================================
+      // DESKTOP: transición cinematográfica
       mm.add(
         "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
         () => {
@@ -37,11 +35,7 @@ export default function HeroScroll({
           const sceneElement = sceneRef.current;
           const containerElement = containerRef.current;
 
-          if (
-            !contentElement ||
-            !sceneElement ||
-            !containerElement
-          ) {
+          if (!contentElement || !sceneElement || !containerElement) {
             return;
           }
 
@@ -79,7 +73,7 @@ export default function HeroScroll({
             0
           );
 
-          // Aparece NarrativeReveal.
+          // Aparece la narrativa.
           timeline.to(
             sceneElement,
             {
@@ -91,7 +85,7 @@ export default function HeroScroll({
             0.25
           );
 
-          // Revelamos las tres palabras.
+          // Revelamos las palabras.
           timeline.from(
             ".narrative-word",
             {
@@ -110,8 +104,8 @@ export default function HeroScroll({
             {
               y: 30,
               opacity: 0,
-              ease: "power2.out",
               duration: 0.25,
+              ease: "power2.out",
             },
             0.65
           );
@@ -120,9 +114,7 @@ export default function HeroScroll({
         }
       );
 
-      // ==========================================
-      // DESKTOP: MOVIMIENTO REDUCIDO
-      // ==========================================
+      // DESKTOP: movimiento reducido
       mm.add(
         "(min-width: 768px) and (prefers-reduced-motion: reduce)",
         () => {
@@ -139,9 +131,7 @@ export default function HeroScroll({
       );
 
       // MOBILE:
-      // Sin pin, scrub ni transformaciones GSAP.
-      // El Hero y NarrativeReveal permanecen
-      // en el flujo normal del documento.
+      // Sin pin ni transformaciones GSAP.
 
       return () => mm.revert();
     },
@@ -174,7 +164,7 @@ export default function HeroScroll({
         {content}
       </div>
 
-      {/* NARRATIVE REVEAL */}
+      {/* NARRATIVA */}
       <div
         ref={sceneRef}
         className="

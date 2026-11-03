@@ -36,12 +36,26 @@
 }
 
 /* ==========================================
-   ESTILOS GENERALES
+   SCROLL Y NAVEGACIÓN
    ========================================== */
 
 html {
-  scroll-behavior: smooth;
+  /* Sin animación global durante las recargas */
+  scroll-behavior: auto;
+
+  /* Espacio para el navbar fijo */
+  scroll-padding-top: 96px;
 }
+
+@media (max-width: 767px) {
+  html {
+    scroll-padding-top: 88px;
+  }
+}
+
+/* ==========================================
+   ESTILOS GENERALES
+   ========================================== */
 
 body {
   background: var(--background);
@@ -63,17 +77,4 @@ h6 {
 ::selection {
   background: #c4b5fd;
   color: #101426;
-}
-
-
-/* Navegación por anclas: espacio para el navbar fijo */
-
-html {
-  scroll-padding-top: 96px;
-}
-
-@media (max-width: 767px) {
-  html {
-    scroll-padding-top: 88px;
-  }
 }

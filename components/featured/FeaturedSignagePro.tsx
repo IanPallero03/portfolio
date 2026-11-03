@@ -86,7 +86,7 @@ export default function FeaturedSignagePro() {
 
           <div className="pb-2 lg:pb-5">
             <p className="featured-summary max-w-lg text-base leading-relaxed text-white/70 sm:text-lg lg:text-xl">
-              Durante cinco meses colaboré en el desarrollo de una plataforma SaaS de cartelería digital. Me encargué de gran parte de la base de componentes del Front-End y, en la etapa final, trabajé en el pulido general de sus interfaces. También desarrollé la identidad visual del producto y aporté mejoras al dashboard y a la experiencia responsive de la landing.
+              Durante cinco meses colaboré en el desarrollo de SignagePro, una plataforma SaaS de cartelería digital. Me encargué de gran parte de la base de componentes del Front-End y, en la etapa final, trabajé en el pulido general de sus interfaces. También desarrollé la identidad visual del producto y aporté mejoras al dashboard y a la experiencia responsive de la landing.
             </p>
             <div className="mt-7 grid grid-cols-3 gap-2 border-t border-white/15 pt-5 sm:gap-4">
               <div className="featured-meta min-w-0">
@@ -115,7 +115,7 @@ export default function FeaturedSignagePro() {
               </div>
               <div className="relative aspect-[16/10] w-full sm:aspect-video">
                 <Image
-                  src={`${basePath}/images/signagepro-cover.png`}
+                  src={`${basePath}/images/signagepro-cover.webp`}
                   alt="Captura real de la plataforma SignagePro"
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1300px"

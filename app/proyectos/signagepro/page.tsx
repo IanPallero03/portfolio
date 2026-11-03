@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import CaseStudyMotion from "@/components/case-study/CaseStudyMotion";
 
 const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
@@ -79,9 +78,9 @@ export default function SignageProCaseStudy() {
     <main className="min-h-screen overflow-x-clip bg-[#F8F9FF] text-[#19152F]">
       <div className="sticky top-0 z-40 border-b border-violet-200/60 bg-[#F8F9FF]/95 backdrop-blur-xl">
         <nav aria-label="Navegación del caso de estudio" className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-10">
-          <Link href="/#proyectos" className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide text-[#33285C] transition hover:text-violet-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-600 sm:text-sm">
+          <a href={`${basePath}/#signagepro`} className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide text-[#33285C] transition hover:text-violet-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-600 sm:text-sm">
             <span aria-hidden="true">←</span> Volver al portfolio
-          </Link>
+          </a>
           <span className="font-mono text-[9px] uppercase tracking-[.19em] text-violet-600 sm:text-xs">IP / CASE STUDY 001</span>
         </nav>
       </div>
@@ -121,7 +120,7 @@ export default function SignageProCaseStudy() {
                   <span className="font-mono text-[9px] tracking-[.12em] text-violet-200">SIGNAGE / 001</span>
                 </div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`${basePath}/images/signagepro-cover.png`} alt="Captura real de la landing de SignagePro" fetchPriority="high" className="block aspect-video w-full object-cover object-top" />
+                <img src={`${basePath}/images/signagepro-cover.webp`} alt="Captura real de la landing de SignagePro" fetchPriority="high" decoding="async" className="block aspect-video w-full object-cover object-top" />
               </div>
             </div>
             <div data-case-reveal className="mt-7 flex flex-wrap gap-3">
@@ -263,7 +262,7 @@ export default function SignageProCaseStudy() {
               <p data-case-reveal className="max-w-lg leading-7 text-white/65">Una demostración real del proyecto, desde sus pantallas hasta su experiencia visual. La reproducción queda a tu elección.</p>
             </div>
             <div data-case-reveal className="mt-10 overflow-hidden rounded-[22px] border border-white/15 bg-[#070B18] shadow-[0_25px_85px_rgba(0,0,0,.3)]">
-              <video controls preload="none" playsInline poster={`${basePath}/images/signagepro-cover.png`} className="aspect-video w-full bg-[#070B18] object-contain">
+              <video controls preload="none" playsInline poster={`${basePath}/images/signagepro-cover.webp`} className="aspect-video w-full bg-[#070B18] object-contain">
                 <source src={`${basePath}/video/signagepro.mp4`} type="video/mp4" />
                 Tu navegador no puede reproducir este video.
               </video>
@@ -292,7 +291,7 @@ export default function SignageProCaseStudy() {
               <p className={`${eyebrow} text-violet-600`}>FIN / CASE STUDY 001</p>
               <h2 className="mt-3 font-heading text-3xl font-bold tracking-[-.055em] sm:text-4xl">Del equipo al producto. <span className="text-violet-600">Y a lo que sigue.</span></h2>
             </div>
-            <Link data-case-reveal href="/#proyectos" className="rounded-full bg-[#17182D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-violet-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-600">Volver al portfolio ↗</Link>
+            <a data-case-reveal href={`${basePath}/#signagepro`} className="rounded-full bg-[#17182D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-violet-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-600">Volver al portfolio ↗</a>
           </div>
         </footer>
       </CaseStudyMotion>

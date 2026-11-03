@@ -82,7 +82,7 @@ const projects: Project[] = [
     ],
     technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "CSS Modules", "GSAP"],
     video: "/video/signagepro.mp4",
-    poster: "/images/signagepro-cover.png",
+    poster: "/images/signagepro-cover.webp",
     theme: "violet",
     demo: "https://signagepro.vercel.app/",
     github: "https://github.com/saass-Tv/SaaS-Tv-Front",

@@ -40,9 +40,39 @@ export default function ExperienceJourney() {
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
-      // Entradas GSAP en escritorio y celular; respetar movimiento reducido.
+      // Respetar la preferencia de movimiento reducido.
       if (reducedMotion) return;
 
+      // MOBILE: una única entrada corta, sin escalas ni animaciones
+      // individuales para los elementos de la tarjeta.
+      if (isMobile) {
+        gsap.fromTo(
+          [
+            ".experience-heading",
+            ".experience-title-slide",
+            ".experience-description",
+            ".experience-language",
+            ".experience-card",
+          ],
+          { autoAlpha: 0, y: 12 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.42,
+            stagger: 0.045,
+            ease: "power2.out",
+            clearProps: "opacity,visibility,transform",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 96%",
+              once: true,
+            },
+          }
+        );
+        return;
+      }
+
+      // DESKTOP: conservar las animaciones cinematográficas originales.
       gsap.fromTo(
         ".experience-heading",
         { autoAlpha: 0, y: 28 },
@@ -57,7 +87,7 @@ export default function ExperienceJourney() {
       gsap.fromTo(
         ".experience-title-slide",
         {
-          x: isMobile ? -45 : -140,
+          x: -140,
           autoAlpha: 0,
         },
         {
@@ -142,8 +172,14 @@ export default function ExperienceJourney() {
         {/* MOBILE: luces suaves y ondas decorativas sin movimiento. */}
         <div className="absolute inset-0 md:hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-[#F7F8FF] via-[#F3F5FF] to-[#F5F2FF]" />
-          <div className="absolute -left-24 top-12 h-56 w-56 rounded-full bg-blue-200/30 blur-[70px]" />
-          <div className="absolute -right-20 bottom-10 h-60 w-60 rounded-full bg-violet-200/30 blur-[75px]" />
+          <div
+            className="absolute -left-24 top-12 h-56 w-56 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(191,219,254,0.32) 0%, transparent 72%)" }}
+          />
+          <div
+            className="absolute -right-20 bottom-10 h-60 w-60 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(221,214,254,0.32) 0%, transparent 72%)" }}
+          />
 
           <svg
             className="absolute inset-0 h-full w-full opacity-70"
